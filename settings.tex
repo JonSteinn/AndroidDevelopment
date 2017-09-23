@@ -1,0 +1,146 @@
+\documentclass[11pt,a4paper,notitlepage]{article}
+\usepackage[margin = 1.5cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc} 
+\usepackage{microtype}
+\usepackage{inconsolata}
+\usepackage{anyfontsize}
+\usepackage[icelandic,english]{babel}
+\selectlanguage{english}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+\usepackage{enumerate}
+\usepackage{multicol}
+\usepackage{tasks}
+\usepackage{xcolor,colortbl}
+\usepackage{siunitx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{etoolbox}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{tikz}
+\usepackage{hyperref}
+\usepackage{xmpmulti}
+\hypersetup
+{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=black,
+    filecolor=blue, 
+  	urlcolor=blue,
+}
+\usepackage[all]{hypcap}
+\usepackage{verbatim}
+\usepackage{color}
+\usepackage{menukeys}
+
+\definecolor{java_bluekeywords}{rgb}{0.13,0.13,1}
+\definecolor{java_greencomments}{rgb}{0,0.5,0}
+\definecolor{java_redstrings}{rgb}{0.9,0,0}
+\definecolor{backgroundgray}{rgb}{0.95,0.95,0.95}
+\definecolor{xml_forestgreen}{RGB}{34,139,34}
+\definecolor{xml_orangered}{RGB}{129,12,121}
+\definecolor{xml_darkblue}{rgb}{0.0,0.0,0.6}
+\definecolor{xml_green}{rgb}{0.0,0.5,0.0}
+\definecolor{xml_gray}{rgb}{0.4,0.4,0.4}
+\usepackage{listings}
+\lstdefinestyle{A_Java} {
+  language=Java,
+  showspaces=false,
+  %numberstyle=\tiny\color{black},
+  backgroundcolor=\color{backgroundgray},
+  showtabs=false,
+  breaklines=true,
+  captionpos=b,
+  %numbers=left,
+  showstringspaces=false,
+  breakatwhitespace=true,
+  escapeinside={(*@}{@*)},
+  commentstyle=\color{java_greencomments},
+  keywordstyle=\color{java_bluekeywords}\bfseries,
+  stringstyle=\color{java_redstrings},
+  basicstyle=\ttfamily\small
+}
+\lstdefinestyle{A_XML} {
+  language=XML,
+  showspaces=false,
+  %numberstyle=\tiny\color{black},
+  backgroundcolor=\color{backgroundgray},
+  showtabs=false,
+  breaklines=true,
+  captionpos=b,
+  %numbers=left,
+  showstringspaces=false,
+  breakatwhitespace=true,
+  escapeinside={(*@}{@*)},
+  extendedchars=true, 
+  breaklines=true,
+  breakatwhitespace=true,
+  emph={},
+  emphstyle=\color{red},
+  basicstyle=\ttfamily\small,
+  columns=fullflexible,
+  commentstyle=\color{xml_gray}\upshape,
+  morestring=[b]",
+  morecomment=[s]{<?}{?>},
+  morecomment=[s][\color{xml_forestgreen}]{<!--}{-->},
+  keywordstyle=\color{xml_orangered},
+  stringstyle=\ttfamily\color{xml_green}\normalfont,
+  alsoletter=,
+  tagstyle=\color{xml_darkblue}\bf,
+  morekeywords={
+    attribute,
+    xmlns,
+    version,
+    type,
+    release,
+    android,
+    tools
+  },
+}
+\renewcommand\lstlistlistingname{List of Listings}
+
+\usepackage{fancyhdr}
+\setlength{\headheight}{15.2pt}
+\pagestyle{fancy}
+
+\newcommand{\name}{Jón Steinn Elíasson}
+\newcommand{\email}{jonsteinn@gmail.com}
+\newcommand{\maketitlepage}[3]
+{
+  \begin{titlepage}
+    \begin{center}
+      \ \\[2.5cm]
+      \textsc{\fontsize{45}{50}\selectfont #1}\\[.5cm]
+      \textsc{\fontsize{25}{50}\selectfont #2}\\[2.5cm]
+      \includegraphics[width=0.65\textwidth]{rulogo.png}\\[2.5cm]
+      \textsc{\fontsize{30}{40}\selectfont #3}\\[.5cm]
+      \textsc{\fontsize{10}{50}\selectfont \today}\\[2.5cm]
+      \textsc{\huge \name}\\[.5cm]
+      \textsc{\email}
+    \end{center}
+    \vfill
+  \end{titlepage}
+}
+
+\newcommand{\maketocpage}
+{
+  \tableofcontents
+  \listoftables
+  \listoffigures
+  \lstlistoflistings
+  \vfill
+  \clearpage
+}
+
+\newcommand{\fat}[1]
+{
+	\noindent\textbf{\fontsize{12}{50}\selectfont #1}\\\noindent
+}
