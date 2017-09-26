@@ -9,23 +9,23 @@ Extensible Markup Language (XML) is a markup language, similar to HTML. The main
 \begin{lstlisting}[style=A_XML, caption={XML tree structure}, label = {listing:tree}]
 <?xml version="1.0" encoding="UTF-8"?>
 <root_element>
-  <element>
-    <leaf_element>
-    </leaf_element>
-  </element>
-  <element>
     <element>
-      <leaf_element>
-      </leaf_element>
+        <leaf_element>
+        </leaf_element>
     </element>
-  </element>
+    <element>
+        <element>
+            <leaf_element>
+            </leaf_element>
+        </element>
+    </element>
 </root_element>
 \end{lstlisting}
 In Android we use XML to define structure of UI and attributes. Elements can have attributes, which are kept in quotation marks and can describe properties such as id, size and text for elements like buttons and input fields.
 \begin{lstlisting}[style=A_XML]
 <element attribute1="value1" attribute2="value2"/>
 \end{lstlisting}
-In Android we use XML to store information in manifest, UI strings, drawables, styles and layouts. In the program we did in lab 0, we created an activity and with it came a layout XML document. We will take a better look at activities later but for now, we can think of them as a single screen and this layout holds info about its UI elements.
+We also use XML to store information in manifest, UI strings, drawables, styles and layouts. In the program we did in lab 0, we created an activity and with it came a layout XML document. We will take a better look at activities later but for now, we can think of them as a single screen and this layout holds info about its UI components.
 
 \section{Views}
 The \href{https://developer.android.com/reference/android/view/View.html}{\texttt{View}} class is the base unit for user interface components. It is responsible for drawing on screen and handling events. It is the root class in the inheritance hierarchy of UI components (disregarding the \texttt{Object} class). Views can be visible component displayed on our screen or invisible containers called \href{https://developer.android.com/reference/android/view/ViewGroup.html}{view groups} to store other visible components. 
@@ -40,32 +40,32 @@ The \href{https://developer.android.com/reference/android/view/View.html}{\textt
 Our layout XML document will have its own hierarchy of views, formed with an XML tree. The root is some container (view group) and it has some elements which can either be nested containers or drawable UI components. 
 
 \begin{figure}[H]
-\centering
-\includegraphics[scale=.5]{viewgroup.png}
-\caption{View hierarchy}
-\label{fig:viewhia}
+  \centering
+  \includegraphics[scale=.5]{viewgroup.png}
+  \caption{View hierarchy}
+  \label{fig:viewhia}
 \end{figure}
 
 \section{Event driven programming}
-Unlike programs we are more used to, there is no main function in Android. It will define what screen (activity) to render when we start the app and from there on, it will react to events, such as swipes and clicks. When such an event occurs, an appropriate event listener is set to handle it. By default, nothing is done but we can implement a method to run if an event occurs.\\
+Unlike the programs we are more used to, there is no main function in Android. It will define what screen (activity) to render when we start the app and from there on, it will react to events, such as swipes and clicks. When such an event occurs, an appropriate event listener is set to handle it. By default, nothing is done but we can implement a method to run if an event occurs.\\
 
-Some events can be implemented in XML. A button is defined and an \texttt{onClick} listener set in listing \ref{listing:xmlhandle}. For this to work, we would need to define the method \texttt{public void clickMethod(View view)} in the corresponding activity.
+Some events can be implemented in XML. A button is defined and an \texttt{onClick} listener set in listing \ref{listing:xmlhandle}. For this to work, we need to define the method \texttt{public void clickMethod(View view)} in the corresponding activity.
 \begin{lstlisting}[style=A_XML, caption={Handling events in XML}, label = {listing:xmlhandle}]
 <Button
     android:id="@+id/my_btn"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:text="ClickMe" 
-    android:onClick="clickMethod"/> <!-- put text into res/strings -->
+    android:onClick="clickMethod"/> <!-- text should be in res/strings -->
 \end{lstlisting}
 We can also set listeners in Java by finding the view by its id. This is shown using an anonymous class in listing \ref{listing:javahandle} but can also be done with lambdas or classes that implement the \texttt{View.OnClickListener}.
 \begin{lstlisting}[style=A_Java, caption={Handling events in Java}, label = {listing:javahandle}]
 Button btn = (Button)findViewById(R.id.my_btn);
 btn.setOnClickListener(new View.OnClickListener() {
-  @Override
-  public void onClick(View v) {
-    // is called when clicked
-  }
+    @Override
+    public void onClick(View v) {
+        // is called when clicked
+    }
 });
 \end{lstlisting}
 
@@ -75,40 +75,40 @@ Layouts are invisible view groups that allows us to structure our UI. The root e
 Before we look at the various layouts, we need to address certain XML attributes and units for their values. There are six different units for sizes in Android, seen in table \ref{table:units}, but luckily we will only ever have to use two, sp for fonts and dp for everything else.
 
 \begin{table}[H]
-\centering
-\begin{tabular}{l|l|l}
-Abbreviation & Name & Description \\ 
-\hline
-dp & Density Independent Pixel & 1 pixel in 160 dpi screens (px $=$ dp $\cdot$ (dpi $/ 160$)) \\
-in & Inches & Physical measurement \\
-mm & Millimeters & Physical measurement \\
-pt & Point & Physical measurement \\
-px & Pixel & A single screen pixel \\
-sp & Scale Independent Pixel & Scaled based on user’s font size preference.
-\end{tabular}
-\caption{Size units}
-\label{table:units}
+    \centering
+    \begin{tabular}{l|l|l}
+        Abbreviation & Name & Description \\ 
+        \hline
+        dp & Density Independent Pixel & 1 pixel in 160 dpi screens (px $=$ dp $\cdot$ (dpi $/ 160$)) \\
+        in & Inches & Physical measurement \\
+        mm & Millimeters & Physical measurement \\
+        pt & Point & Physical measurement \\
+        px & Pixel & A single screen pixel \\
+        sp & Scale Independent Pixel & Scaled based on user’s font size preference.
+    \end{tabular}
+    \caption{Size units}
+    \label{table:units}
 \end{table}%dp, in, mm, pt, px, sp
 
 The attributes to position elements are explained in figures \ref{fig:wah}, \ref{fig:grav} and \ref{fig:pam}.
 
 \begin{figure}[H]
-\centering
-\includegraphics[scale=.35]{width_height.png}
-\caption{Width and height}
-\label{fig:wah}
+  \centering
+  \includegraphics[scale=.35]{width_height.png}
+  \caption{Width and height}
+  \label{fig:wah}
 \end{figure}
 \begin{figure}[H]
-\centering
-\includegraphics[scale=.35]{gravity.png}
-\caption{Gravity}
-\label{fig:grav}
+  \centering
+  \includegraphics[scale=.35]{gravity.png}
+  \caption{Gravity}
+  \label{fig:grav}
 \end{figure}
 \begin{figure}[H]
-\centering
-\includegraphics[scale=.35]{padding_margin.png}
-\caption{Padding and margin}
-\label{fig:pam}
+  \centering
+  \includegraphics[scale=.35]{padding_margin.png}
+  \caption{Padding and margin}
+  \label{fig:pam}
 \end{figure}
 
 
@@ -186,17 +186,18 @@ Dynamic lists must be populated in Java with the \texttt{ArrayAdapter} class. Cl
 \begin{lstlisting}[style=A_Java, caption={Dynamic list}, label = {listing:dynlis}]
 // Set values dynamically
 String[] items = new String[]{"item1", "item2", "item3"};
-ArrayAdapter<String> aa = new ArrayAdapter<String>(
-        this, android.R.layout.simple_list_item_1, items);
+ArrayAdapter<String> aa = new ArrayAdapter<String>(this, 
+                          android.R.layout.simple_list_item_1, items);
 ListView lis = (ListView)findViewById(R.id.list_view_example);
 lis.setAdapter(aa);
 // Set listener when list items are clicked
 lis.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-  @Override
-  public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-    String item = (String)parent.getItemAtPosition(position);
-    Toast.makeText(MainActivity.this, item, Toast.LENGTH_SHORT).show();
-  }
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, 
+                            int position, long id) {
+        String item = (String)parent.getItemAtPosition(position);
+        Toast.makeText(MainActivity.this, item, Toast.LENGTH_SHORT).show();
+    }
 });
 \end{lstlisting}
 
@@ -211,7 +212,7 @@ A text view is used to display text. The text can be changed in Java with the \t
     android:layout_height="wrap_content"
     android:fontFamily="sans-serif-condensed"
     android:text="My Text View"
-    android:textSize="30sp"/> <!-- Move text to res/strings -->
+    android:textSize="30sp"/> <!-- text should be in res/strings -->
 \end{lstlisting}
 
 \subsection{Edit text}
@@ -223,7 +224,7 @@ Edit text are used for text input. They have various types that restrict their i
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:hint="Enter text"
-    android:inputType="text" /> <!-- Move strings to res/strings -->
+    android:inputType="text" /> <!-- hint should be in res/strings -->
 \end{lstlisting}
 To access the input, we can use the following code. Watch out for empty inputs or inputs of only white spaces.
 \begin{lstlisting}[style=A_Java]
@@ -255,19 +256,19 @@ Radio buttons have to be grouped in a container called \texttt{RadioGroup}. If n
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="option 1"
-        android:onClick="radioClick"/>
+        android:onClick="radioClick"/> <!-- text should be in res/strings -->
     <RadioButton
         android:id="@+id/r2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="option 2"
-        android:onClick="radioClick"/>
+        android:onClick="radioClick"/> <!-- text should be in res/strings -->
     <RadioButton
         android:id="@+id/r3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="option 3"
-        android:onClick="radioClick"/>
+        android:onClick="radioClick"/> <!-- text should be in res/strings -->
 </RadioGroup>
 \end{lstlisting}
 
@@ -275,19 +276,19 @@ In Java, we can find out which button was pushed by getting the id from the \tex
 
 \begin{lstlisting}[style=A_Java, caption={Radio button event}, label={listing:radioev}]
 public void radioClick(View view) {
-  if (((RadioButton)view).isChecked()) {
-    switch (view.getId()) {
-      case R.id.r1:
-        Toast.makeText(this, "R1", Toast.LENGTH_SHORT).show();
-        break;
-      case R.id.r2:
-        Toast.makeText(this, "R2", Toast.LENGTH_SHORT).show();
-        break;
-      case R.id.r3:
-        Toast.makeText(this, "R3", Toast.LENGTH_SHORT).show();
-        break;
+    if (((RadioButton)view).isChecked()) {
+        switch (view.getId()) {
+            case R.id.r1:
+                Toast.makeText(this, "R1", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.r2:
+                Toast.makeText(this, "R2", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.r3:
+                Toast.makeText(this, "R3", Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
-  }
 }
 \end{lstlisting}
 
@@ -307,23 +308,22 @@ They can also be populated in Java with \texttt{ArrayAdapter} but use a differen
 \begin{lstlisting}[style=A_Java, caption={Spinner population and event}, label={listing:spinpopev}]
 String[] entries = new String[]{"item1", "item2", "item3"};
 ArrayAdapter<String> aa = new ArrayAdapter<String>(
-        this, android.R.layout.simple_spinner_item, entries);
+            this, android.R.layout.simple_spinner_item, entries);
 Spinner spinner = (Spinner)findViewById(R.id.my_spinner);
 spinner.setAdapter(aa);
-spinner.setOnItemSelectedListener(
-  new AdapterView.OnItemSelectedListener() {
+spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
     @Override
-    public void onItemSelected(AdapterView<?> parent, View view,
-                                     int position, long id) {
-      Toast.makeText(MainActivity.this, parent.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show();
+    public void onItemSelected(AdapterView<?> parent, 
+                            View view, int position, long id) {
+        String msg = parent.getItemAtPosition(position).toString();
+        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
     }
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-      Toast.makeText(MainActivity.this, "Nothing selected",
-                       Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, "Nothing selected",
+        Toast.LENGTH_SHORT).show();
     }
-  }
-);
+});
 \end{lstlisting}
 
 
@@ -347,17 +347,17 @@ public class MainActivity extends AppCompatActivity {
     private TextView answer;
     @Override 
     protected void onCreate(Bundle savedInstanceState) {
-    	// TODO: set fields
+        // TODO: set fields
     }
     public void calculate(View view) {
-    	// Check if edit text are empty
+        // Check if edit text are empty
         if (first.getText().toString().trim().length() == 0
-                || second.getText().toString().trim().length() == 0) {
+                    || second.getText().toString().trim().length() == 0) {
             answer.setText(R.string.err_msg);
             return;
         } else {
             try {
-            	// Convert text fields to integers for arithmetic
+                // Convert text fields to integers for arithmetic
                 int lhs = Integer.parseInt(first.getText().toString());
                 int rhs = Integer.parseInt(second.getText().toString());
                 // TODO: calculations based on button pressed
