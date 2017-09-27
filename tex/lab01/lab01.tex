@@ -114,7 +114,7 @@ The attributes to position elements are explained in figures \ref{fig:wah}, \ref
 
 
 \subsection{Linear layout}
-Linear layout places other views either horizontally in a single row or vertically in a single column. The \texttt{orientation} attribute determines its direction. Listing \ref{listing:linlay} shows a linear layout in XML where the orientation is horizontal, so all children will be placed in a single row and they will not wrap if we reach the end of the screen. The gravity centers horizontal orientation horizontally and vertically for vertical orientation. The views are placeholder for any view, but they will be aligned horizontally.
+Linear layout places other views either horizontally in a single row or vertically in a single column. The \texttt{orientation} attribute determines its direction. Listing \ref{listing:linlay} shows a linear layout in XML where the orientation is horizontal, so all children will be placed in a single row and they will not wrap if we reach the end of the screen. The gravity centers horizontally and vertically for both orientations. The views are placeholder for any view.
 \begin{lstlisting}[style=A_XML, caption={Linear layout declaration}, label = {listing:linlay}]
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -129,7 +129,7 @@ Linear layout places other views either horizontally in a single row or vertical
 \end{lstlisting}
 
 \subsection{Relative layout}
-Relative layouts specify the position of its views relative either it siblings or parent view. Attributes revolve around position relative to others given by id (or their unique parent view). Attributes like \texttt{below} and \texttt{toLeftOf} have view id's as value while alignments relative to parent have boolean values.
+Relative layouts specify the position of its views relative either it siblings or parent view. Attributes revolve around position relative to others given by id (or their unique parent view). Attributes like \texttt{below} and \texttt{toLeftOf} have view id's as value while alignments relative to parent have boolean values. Listing \ref{listing:rellay} shows example views (using \texttt{SomeView} as a placeholder) positioning in a relative view.
 \begin{lstlisting}[style=A_XML, caption={Relative layout declaration}, label = {listing:rellay}]
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -181,24 +181,26 @@ List view offer scrollable views of list items. Static lists can be defined with
 </ListView>
 \end{lstlisting}
 
-Dynamic lists must be populated in Java with the \texttt{ArrayAdapter} class. Clicking an item in the list does not invoke a \texttt{OnClickEvent} but \texttt{OnItemClickListener}. The populating of a list and a click event is shown in listing \ref{listing:dynlis}. the \texttt{Toast} class is used to create a timed pop up message.
+Dynamic lists must be populated in Java with the \texttt{ArrayAdapter} class. Clicking an item in the list does not invoke a \texttt{OnClickEvent} on the item but \texttt{OnItemClickListener}. The populating of a list and a click event is shown in listing \ref{listing:dynlis}. The \texttt{Toast} class is used to create a timed pop up message.
 
 \begin{lstlisting}[style=A_Java, caption={Dynamic list}, label = {listing:dynlis}]
 // Set values dynamically
-String[] items = new String[]{"item1", "item2", "item3"};
-ArrayAdapter<String> aa = new ArrayAdapter<String>(this, 
-                          android.R.layout.simple_list_item_1, items);
-ListView lis = (ListView)findViewById(R.id.list_view_example);
-lis.setAdapter(aa);
+String[] items = new String[]{ "item1", "item2", "item3"};
+ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+    this, android.R.layout.simple_list_item_1, items);
+ListView lis = (ListView)findViewById (R.id.list_view_example);
+lis.setAdapter (aa);
 // Set listener when list items are clicked
 lis.setOnItemClickListener(new AdapterView.OnItemClickListener() {
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, 
-                            int position, long id) {
+    public void onItemClick(
+        AdapterView<?> parent, View view, int position, long id
+    ) {
         String item = (String)parent.getItemAtPosition(position);
         Toast.makeText(MainActivity.this, item, Toast.LENGTH_SHORT).show();
     }
 });
+
 \end{lstlisting}
 
 \section{Widgets}
@@ -226,14 +228,14 @@ Edit text are used for text input. They have various types that restrict their i
     android:hint="Enter text"
     android:inputType="text" /> <!-- hint should be in res/strings -->
 \end{lstlisting}
-To access the input, we can use the following code. Watch out for empty inputs or inputs of only white spaces.
+To access the input, we can use the following code. Watch out for empty inputs or inputs containing white spaces only.
 \begin{lstlisting}[style=A_Java]
 EditText input = (EditText)findViewById(R.id.my_input_form);
 String currentInput = input.getText().toString();
 \end{lstlisting}
 
 \subsection{Image view}
-Image view can display image resources on screen. Suppose we have an image called image.png, then we can place it in the drawable folder and set the image view's src as is done in listing \ref{listing:img}.
+Image view can display image resources on screen. Suppose we have an image called image.png that we have placed in the drawable folder, then we can set an image view's src to its name and it will render it on screen.
 \begin{lstlisting}[style=A_XML, caption={Image view declaration}, label={listing:img}]
 <ImageView
     android:layout_width="wrap_content"
@@ -306,22 +308,22 @@ Spinners are Android's drop down lists. They work similarly to list views and ca
 They can also be populated in Java with \texttt{ArrayAdapter} but use a different layout id than list views. The \texttt{onItemSelectedListener} is triggered as soon as an element is selected in the spinner. For spinners with a possible empty choice, the method \texttt{onNothingSelected} is invoked.
 
 \begin{lstlisting}[style=A_Java, caption={Spinner population and event}, label={listing:spinpopev}]
-String[] entries = new String[]{"item1", "item2", "item3"};
-ArrayAdapter<String> aa = new ArrayAdapter<String>(
-            this, android.R.layout.simple_spinner_item, entries);
+String entries[] = new String[]{"item1", "item2", "item3"};
+ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
+        this, android.R.layout.simple_spinner_item, entries);
 Spinner spinner = (Spinner)findViewById(R.id.my_spinner);
-spinner.setAdapter(aa);
+spinner.setAdapter(arrayAdapter);
 spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
     @Override
-    public void onItemSelected(AdapterView<?> parent, 
-                            View view, int position, long id) {
+    public void onItemSelected(
+            AdapterView<?> parent, View view, int position, long id
+    ) {
         String msg = parent.getItemAtPosition(position).toString();
         Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
     }
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-        Toast.makeText(MainActivity.this, "Nothing selected",
-        Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, "None", Toast.LENGTH_SHORT).show();
     }
 });
 \end{lstlisting}
