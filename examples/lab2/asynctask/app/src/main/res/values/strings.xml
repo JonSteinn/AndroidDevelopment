@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Lab</string>
+    <string name="start_thread">Start thread</string>
+    <string name="cancel_thread">Cancel thread</string>
+    <string name="idle">Idle</string>
+    <string name="running">Running</string>
+    <string name="complete">Complete</string>
+    <string name="cancelled">Cancelled</string>
+</resources>
