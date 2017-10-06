@@ -189,7 +189,7 @@ String[] items = new String[]{ "item1", "item2", "item3"};
 ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
     this, android.R.layout.simple_list_item_1, items);
 ListView lis = (ListView)findViewById (R.id.list_view_example);
-lis.setAdapter (aa);
+lis.setAdapter(arrayAdapter);
 // Set listener when list items are clicked
 lis.setOnItemClickListener(new AdapterView.OnItemClickListener() {
     @Override
