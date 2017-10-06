@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Lab</string>
+    <string name="separator">----------------------</string>
+    <string-array name="arr">
+        <item>"Item 1"</item>
+        <item>"Item 2"</item>
+        <item>"Item 3"</item>
+    </string-array>
+</resources>
