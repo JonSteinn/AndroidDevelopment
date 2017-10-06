@@ -347,27 +347,34 @@ In this assignment you should design a very simple calculator with two input fie
 public class MainActivity extends AppCompatActivity {
     private EditText first, second;
     private TextView answer;
-    @Override 
-    protected void onCreate(Bundle savedInstanceState) {
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        
         // TODO: set fields
     }
+
     public void calculate(View view) {
-        // Check if edit text are empty
-        if (first.getText().toString().trim().length() == 0
-                    || second.getText().toString().trim().length() == 0) {
-            answer.setText(R.string.err_msg);
-            return;
-        } else {
-            try {
+        try {
+            if (inputIsEmpty()) {
+                answer.setText(R.string.err_msg);
+            } else {
                 // Convert text fields to integers for arithmetic
                 int lhs = Integer.parseInt(first.getText().toString());
                 int rhs = Integer.parseInt(second.getText().toString());
                 // TODO: calculations based on button pressed
                 // TODO: set answer display
-            } catch (NumberFormatException ex) {
-                answer.setText(R.string.err_msg);
             }
+        }catch (NumberFormatException ex) {
+            answer.setText(R.string.err_msg);
         }
+    }
+
+    private boolean inputIsEmpty() {
+        return first.getText().toString().trim().length() == 0 ||
+                second.getText().toString().trim().length() == 0;
     }
 }
 \end{lstlisting}
