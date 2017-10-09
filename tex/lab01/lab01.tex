@@ -49,7 +49,7 @@ Our layout XML document will have its own hierarchy of views, formed with an XML
 \section{Event driven programming}
 Unlike the programs we are more used to, there is no main function in Android. It will define what screen (activity) to render when we start the app and from there on, it will react to events, such as swipes and clicks. When such an event occurs, an appropriate event listener is set to handle it. By default, nothing is done but we can implement a method to run if an event occurs.\\
 
-Some events can be implemented in XML. A button is defined and an \texttt{onClick} listener set in listing \ref{listing:xmlhandle}. For this to work, we need to define the method \texttt{public void clickMethod(View view)} in the corresponding activity.
+Some events can be implemented in XML. A button is defined and an \texttt{onClick} listener set in listing \ref{listing:xmlhandle}. For this to work, we need to define the method \texttt{public void clickMethod(View view)} in the corresponding activity. 
 \begin{lstlisting}[style=A_XML, caption={Handling events in XML}, label = {listing:xmlhandle}]
 <Button
     android:id="@+id/my_btn"
@@ -164,7 +164,7 @@ The grid layout places its children with 2d positions in a grid. The column dete
 \end{lstlisting}
 
 \subsection{Lists view}
-List view offer scrollable views of list items. Static lists can be defined with string arrays in the string resource XML file and added with the entries tag as is shown in listings \ref{listing:resarr} and \ref{listing:stalis}.
+\href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab1/list}{List view} offer scrollable views of list items. Static lists can be defined with string arrays in the string resource XML file and added with the entries tag as is shown in listings \ref{listing:resarr} and \ref{listing:stalis}.
 \begin{lstlisting}[style=A_XML, caption={Resource string array}, label = {listing:resarr}]
 <string-array name="arr">
     <item>"item1"</item>
@@ -274,7 +274,7 @@ Radio buttons have to be grouped in a container called \texttt{RadioGroup}. If n
 </RadioGroup>
 \end{lstlisting}
 
-In Java, we can find out which button was pushed by getting the id from the \texttt{View} parameter. 
+\href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab1/radiobuttons}{In Java}, we can find out which button was pushed by getting the id from the \texttt{View} parameter. 
 
 \begin{lstlisting}[style=A_Java, caption={Radio button event}, label={listing:radioev}]
 public void radioClick(View view) {
@@ -295,7 +295,7 @@ public void radioClick(View view) {
 \end{lstlisting}
 
 \subsection{Spinners}
-Spinners are Android's drop down lists. They work similarly to list views and can be populated with string array resources in XML.
+\href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab1/spinner}{Spinners} are Android's drop down lists. They work similarly to list views and can be populated with string array resources in XML.
 
 \begin{lstlisting}[style=A_XML, caption={Spinner declaration}, label={listing:spinxml}]
 <Spinner
