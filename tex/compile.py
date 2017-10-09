@@ -20,6 +20,8 @@ process = subprocess.Popen(args=cmd, shell=False, stdout=subprocess.PIPE, cwd=pt
 check_return_code = True
 try:
     process.wait(5)
+    second_process = subprocess.Popen(args=cmd, shell=False, stdout=subprocess.PIPE, cwd=pth)
+    second_process.wait(5)
 except subprocess.TimeoutExpired:
     os.kill(process.pid, signal.SIGTERM)
     check_return_code = False
