@@ -2,6 +2,7 @@ package com.ru.droid.lab;
 
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -50,21 +51,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setObserverAndObservable() {
-        // Fake 2.5 second task and return "A" or "B" as result (alternating between)
         fetchData = Observable.fromCallable(new Callable<String>() {
-            private boolean returnSwap = false;
             @Override
             public String call() throws Exception {
                 SystemClock.sleep(2500);
-                return (returnSwap = !returnSwap) ? "A" : "B";
+                return getString(R.string.download_success);
             }
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+        }).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread());
 
         // Handles updating UI given observable
         displayData = new Observer<String>() {
             @Override
             public void onSubscribe(@NonNull Disposable d) {
                 progress.setVisibility(View.VISIBLE);
+                textView.setText(R.string.download_task);
             }
 
             @Override
@@ -74,14 +74,14 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onError(@NonNull Throwable e) {
-                Toast.makeText(MainActivity.this, "Download failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, R.string.download_fail, Toast.LENGTH_SHORT).show();
                 textView.setText(R.string.error);
                 progress.setVisibility(View.INVISIBLE);
             }
 
             @Override
             public void onComplete() {
-                Toast.makeText(MainActivity.this, "Download complete", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, R.string.download_success, Toast.LENGTH_SHORT).show();
                 progress.setVisibility(View.INVISIBLE);
                 button.setClickable(true);
             }

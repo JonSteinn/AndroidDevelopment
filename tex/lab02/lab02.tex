@@ -24,7 +24,7 @@ method & functionality \\
 
 Threads, in its simplest form, are a way to execute two (or more) blocks of code at the same time while sharing certain resources. Each thread executes a run method, line by line, and once started, we have limited control over the order of which thread is being executed\footnote{A context switch is when an operating system switches execution from one thread to another}. In listing \ref{listing:tord} we have three threads, the thread that starts the other two (the main thread) which will print \texttt{X} and \texttt{thread1} and \texttt{thread2}, printing \texttt{A} and \texttt{1} respectively. Running this program produces an nondeterministic output, in fact all possible permutations of \texttt{A}, \texttt{1} and \texttt{X} can be printed.
 
-\begin{lstlisting}[style=A_Java, caption={Order of thread execution}, label={listing:tord}]
+\begin{lstlisting}[style=A_Java, caption={\href{https://github.com/JonSteinn/AndroidDevelopment/blob/master/examples/lab2/javathreads/1/Main.java}{Order of thread execution}}, label={listing:tord}]
 public static void main(String[] args) {
     Thread thread1 = new Thread(() -> System.out.print("A"));
     Thread thread2 = new Thread(() -> System.out.print("1"));
@@ -36,7 +36,7 @@ public static void main(String[] args) {
 
 One reason to use threads is to keep an UI from locking while a long task is happening in the background. Listing \ref{listing:infoui} starts a thread and keeps the user informed that the background job is still running. A more familiar version of this idea is a spinning wheel for the user to look at while he waits.
 
-\begin{lstlisting}[style=A_Java, caption={UI keeping user informed on progress}, label={listing:infoui}]
+\begin{lstlisting}[style=A_Java, caption={\href{https://github.com/JonSteinn/AndroidDevelopment/blob/master/examples/lab2/javathreads/2/Main.java}{UI keeping user informed on progress}}, label={listing:infoui}]
 public class Main {
     public static void main(String[] args) {
         try {
@@ -65,7 +65,7 @@ A race conditions can occur when two threads access and edit the same resource i
 
 In listing \ref{listing:rcon} we start a thousand threads that increment two variables which are initially equal and then check if they are still equal, upon which they increment a counter. A sequential run of such a program would always increment the variable but what can happen here is that thread $i$ is running and has just incremented the variable \texttt{a} when a context switch occurs and thread $j$ starts to run which now increments \texttt{a} again and then \texttt{b} and when done, checks if they are equal which they are not since thread $i$ only incremented \texttt{a} so $j$ will not increment the counter variable. Of course we can get lucky and everything happens in the correct order, even most of the time, but a slim chance of a race condition is all that is needed to make an entire program ruined.  
 
-\begin{lstlisting}[style=A_Java, caption={Race condition}, label={listing:rcon}]
+\begin{lstlisting}[style=A_Java, caption={\href{https://github.com/JonSteinn/AndroidDevelopment/blob/master/examples/lab2/javathreads/3/Main.java}{Race condition}}, label={listing:rcon}]
 public class Main {
     private static int counter = 0, a = 0, b = 0;
     public static void main(String[] args) {
@@ -86,7 +86,7 @@ public class Main {
 }
 \end{lstlisting}
 
-To deal with race conditions, we can identify the critical section and make sure that only one thread can operate there at any given time. That does however come at the cost of execution speed so we must place such lockouts wisely. When some thread arrives at a critical section, it should either be locked and make the thread wait or as soon as the thread 'steps in', the section should lock other threads out, until the current one is done. This can be done with the Java keyword \verb!synchronized!. Synchronized methods can only be run by one thread at a time. Another approach is to use a mutex. One can think of a mutex like a single key which you must acquire to reach a critical section but once used, no one else can use it until the current key user has returned it after leaving the critical section. In Java, mutexes are instances of the class \texttt{Semaphore}, a more general case of a mutex for arbitrary number of keys (even a negative amount!). Using a Semaphore initialized with a key count of 1, the following mutex will fix our race condition.
+To deal with race conditions, we can identify the critical section and make sure that only one thread can operate there at any given time. That does however come at the cost of execution speed so we must place such lockouts wisely. When some thread arrives at a critical section, it should either be locked and make the thread wait or as soon as the thread 'steps in', the section should lock other threads out, until the current one is done. This can be done with the Java keyword \verb!synchronized!. Synchronized methods can only be run by one thread at a time. Another approach is to use a mutex. One can think of a mutex like a single key which you must acquire to reach a critical section but once used, no one else can use it until the current key user has returned it after leaving the critical section. In Java, mutexes are instances of the class \texttt{Semaphore}, a more general case of a mutex for arbitrary number of keys (even a negative amount!). Using a Semaphore initialized with a key count of 1, the \href{https://github.com/JonSteinn/AndroidDevelopment/blob/master/examples/lab2/javathreads/4/Main.java}{following mutex} will fix our race condition even though, locking the entire part of a thread does not make good use of them.
 
 \begin{lstlisting}[style=A_Java]
 threads[i] = new Thread(() -> {
@@ -104,36 +104,40 @@ threads[i] = new Thread(() -> {
 
 Using such locks brings about another problem. What if Thread $i$ is waiting on thread $j$ and thread $j$ is waiting on thread $i$? That will go on forever and is called a deadlock. Taking a look at listing \ref{listing:dlock}, suppose that the thread \texttt{t1} start and acquires \texttt{mutex1} but as soon as he has, a context switch occurs and the thread \texttt{t2} starts to run and acquires \texttt{mutex2}. Now it does not matter which thread is running, both mutexes are locked and both threads are unable to acquire the 'key'.
 
-\begin{lstlisting}[style=A_Java, caption={Deadlock}, label={listing:dlock}]
-public static void main(String[] args) {
-    Semaphore mutex1 = new Semaphore(1);
-    Semaphore mutex2 = new Semaphore(1);
-    Thread t1 = new Thread(() -> {
-        try {
-            mutex1.acquire();
-            mutex2.acquire();
-            mutex1.release();
-            mutex2.release();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    });
-    Thread t2 = new Thread(() -> {
-        try {
-            mutex2.acquire();
-            mutex1.acquire();
-            mutex2.release();
-            mutex1.release();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    });
+\begin{lstlisting}[style=A_Java, caption={\href{https://github.com/JonSteinn/AndroidDevelopment/blob/master/examples/lab2/javathreads/5/Main.java}{Deadlock}}, label={listing:dlock}]
+public class Main {
+    public static void main(String[] args) {
+        Semaphore mutex1 = new Semaphore(1);
+        Semaphore mutex2 = new Semaphore(1);
+        Thread t1 = new Thread(() -> {
+            try {
+                mutex1.acquire();
+                mutex2.acquire();
+                mutex1.release();
+                mutex2.release();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        Thread t2 = new Thread(() -> {
+            try {
+                mutex2.acquire();
+                mutex1.acquire();
+                mutex2.release();
+                mutex1.release();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        t1.start();
+        t2.start();
+    }
 }
 \end{lstlisting}
 
 Thread pools are used to gain more control over threads in Java. We can control the upper bound of how many threads are active at any given time from a pool. This is done with \texttt{Executor} and \texttt{ExecutorService}. In listing \ref{listing:thpool} we have a thread pool with a thread limit of five but 15 threads to start. As soon as 5 threads are already active, no more are added until at least one of them finishes.
 
-\begin{lstlisting}[style=A_Java, caption={Thread pool}, label={listing:thpool}]
+\begin{lstlisting}[style=A_Java, caption={\href{https://github.com/JonSteinn/AndroidDevelopment/blob/master/examples/lab2/javathreads/6/Main.java}{Thread pool}}, label={listing:thpool}]
 public static void main(String[] args) {
     ExecutorService executor = Executors.newFixedThreadPool(5);
     for (int i = 0; i < 15; i++) {
@@ -151,6 +155,8 @@ public static void main(String[] args) {
 }
 \end{lstlisting}
 
+
+
 \section{The Android UI thread}
 Upon starting an Android app, thread is created to which will run our launcher activity and from there on, any component (which we will look at later) started. It also handles all events and interaction concerning the UI. No other threads should interact directly with the UI. This thread is called the main thread or the UI thread.\\
 
@@ -162,7 +168,7 @@ Just as the UI thread shouldn't run long tasks, the vice versa holds, that long 
 \item \textbf{Never update your UI from any thread other than the UI thread}
 \end{itemize}
 
-There are multiple Android specific ways to create and managing threads but we will only look at few here.
+There are multiple Android specific ways to create and managing threads but we will only look at few here. Background tasks in Android bring about some memory issues which we will address later, when dealing with multiple components.
 
 \section{Asynchronous tasks}
 The abstract class \texttt{AsyncTask} provides an easy way to perform a background task which can talk to the UI thread. Asynchronous tasks are used for a short task required to run in a background thread, preferably not running longer than a few seconds. They are however bound to the lifetime of their activity.\\
@@ -182,7 +188,9 @@ All of these can be of the type \texttt{Void} which will omit that type from the
 \end{itemize}
 Additionally \texttt{onCancel} is called if the tasked is canceled instead of \texttt{onPostExecute}. The cancellation should be done by the UI thread but once canceled, the \texttt{doInBackground} method will not stop unless it regularly checks if the task has been canceled.\\
 
-Asynchronous task should always be created and started by the UI thread. To start a asynchronous task, we can call \texttt{execute} or \texttt{executeOnExecutor}, the latter when using a Thread pool. To communicate with the UI thread we must either declare our task class (that inhertis from \texttt{AsyncTask}) as a subclass of our activity or use a callback interface.
+Asynchronous task should always be created and started by the UI thread. To start a asynchronous task, we can call \texttt{execute} or \texttt{executeOnExecutor}, the latter when using a Thread pool. To communicate with the UI thread we must either declare our task class (that inhertis from \texttt{AsyncTask}) as a subclass of our activity or use a callback interface.\\
+
+Listings \ref{listing:asynlay} and \ref{listing:asyncprog} shows a program that upon a button click creates a fake background job and updates a progress bar while working in the background. The job can be cancelled with another button and its status is displayed on the screen. The source code can be found \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab2/asynctask}{here}.
 
 \begin{lstlisting}[style=A_XML, caption={Layout for AsyncTask program}, label={listing:asynlay}]
 <?xml version="1.0" encoding="utf-8"?>
@@ -311,6 +319,7 @@ public class MainActivity extends AppCompatActivity {
 }
 \end{lstlisting}
 
+
 \section{Loopers and Handlers}
 A looper provides a thread with a message queue (message being some data or job to process) and keeps checking if any data to process. Each thread can only have one looper but does not need to have one. The UI thread uses this mechanic to process events. Messages are handled by handlers. Each thread can have many handlers. Handlers are bound to a single thread that must have a Looper (and therefore, a message queue) and can post data to a Looper's message queue or process it. Handlers can add a message to the message queue in a thread from another thread that will be processed eventually. A handler can therefore easily communicate with the UI thread from another thread.
 
@@ -320,6 +329,8 @@ A looper provides a thread with a message queue (message being some data or job 
 \caption{Simple calculator}
 \label{fig:simcal}
 \end{figure}
+
+A typical scenario would have a handler tight to the UI thread's Looper being accessed from a second thread asking him to post a task to perform on the UI thread. This task would typically envolce UI updates from the second thread. This can be seen in listings \ref{listing:switchlayout} and \ref{listing:layoutprg} where upon clicking a switch we create a new thread which posts to the UI thread the task to disable the switch and start showing the progress bar. After that the new thread just waits for 5 seconds which can resamble any task taking some time and once he has finished he posts a nother task to the UI thread's looper to update the UI once again. The source code can be found \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab2/handlers}{here}.
 
 \begin{lstlisting}[style=A_XML,caption={Layout for handler program},label={listing:switchlayout}]
 <?xml version="1.0" encoding="utf-8"?>
@@ -343,7 +354,7 @@ A looper provides a thread with a message queue (message being some data or job 
 </LinearLayout>
 \end{lstlisting}
 
-\begin{lstlisting}[style=A_Java, caption={Background job with a thread and communication to UI thread with a handler}, label={listing:layoutprg}]
+\begin{lstlisting}[style=A_Java,caption={Background job with a thread and communication to UI thread with a handler},label={listing:layoutprg}]
 public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -391,11 +402,16 @@ public class MainActivity extends AppCompatActivity {
 \end{lstlisting}
 
 \section{RxAndroid}
-{\Huge TODO(find some assignment...)}
-Write chapter
-(3rd party option for threading)
+An Android specific binding for the RxJava library is a very powerful 3rd party option to handle background tasks. Its main components are schedulers, observers and observables. An observable can perform a background task while notifying an observer on a specified scheduler. Before we can \href{https://github.com/ReactiveX/RxAndroid}{RxAndroid} we must add the following dependencies in our \texttt{build.gradle}.
 
-\begin{lstlisting}[style=A_XML]
+\begin{lstlisting}[style=A_txt]
+compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+compile 'io.reactivex.rxjava2:rxjava:2.1.3'
+\end{lstlisting}
+
+Listing \ref{listing:rxandr} and \ref{listing:rxandrL} show a program use schedulers, observers and observables to perform a fake task that takes some time while keeping the UI thread from locking. 
+
+\begin{lstlisting}[style=A_XML, caption={Layout for RxAndroid example}, label={listing:rxandrL}]
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -420,62 +436,34 @@ Write chapter
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="click me"/>
+        android:text="@string/click_me"/>
 </LinearLayout>
 \end{lstlisting}
 
-\begin{lstlisting}[style=A_Java]
+\begin{lstlisting}[style=A_Java, caption={Background task using RxAndroid}, label={listing:rxandr}]
 public class MainActivity extends AppCompatActivity {
 
     private TextView textView;
     private ProgressBar progress;
     private Button button;
-    private Observable<String> fetchData = Observable.fromCallable(new Callable<String>() {
 
-        private boolean returnSwap = false;
-
-        @Override
-        public String call() throws Exception {
-            SystemClock.sleep(2500);
-            return (returnSwap = !returnSwap) ? "A" : "B";
-        }
-    }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
-    private Observer<String> displayData = new Observer<String>() {
-        @Override
-        public void onSubscribe(@NonNull Disposable d) {
-            progress.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        public void onNext(@NonNull String s) {
-            textView.setText(s);
-        }
-
-        @Override
-        public void onError(@NonNull Throwable e) {
-            Toast.makeText(MainActivity.this, "Download failed", Toast.LENGTH_SHORT).show();
-            textView.setText("Error");
-            progress.setVisibility(View.INVISIBLE);
-        }
-
-        @Override
-        public void onComplete() {
-            Toast.makeText(MainActivity.this, "Download complete", Toast.LENGTH_SHORT).show();
-            progress.setVisibility(View.INVISIBLE);
-            button.setClickable(true);
-        }
-    };
+    // RxAndroid: Observer and observable
+    private Observer<String> displayData;
+    private Observable<String> fetchData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        setObserverAndObservable();
+
         textView = (TextView)findViewById(R.id.text);
         progress = (ProgressBar)findViewById(R.id.progress);
         button = (Button)findViewById(R.id.button);
 
-        findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
+        // Subscribe on click
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 button.setClickable(false);
@@ -483,13 +471,60 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void setObserverAndObservable() {
+        fetchData = Observable.fromCallable(new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                SystemClock.sleep(2500);
+                return getString(R.string.download_success);
+            }
+        }).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread());
+
+        // Handles updating UI given observable
+        displayData = new Observer<String>() {
+            @Override
+            public void onSubscribe(@NonNull Disposable d) {
+                progress.setVisibility(View.VISIBLE);
+                textView.setText(R.string.download_task);
+            }
+
+            @Override
+            public void onNext(@NonNull String s) {
+                textView.setText(s);
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+                Toast.makeText(MainActivity.this, R.string.download_fail, Toast.LENGTH_SHORT).show();
+                textView.setText(R.string.error);
+                progress.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onComplete() {
+                Toast.makeText(MainActivity.this, R.string.download_success, Toast.LENGTH_SHORT).show();
+                progress.setVisibility(View.INVISIBLE);
+                button.setClickable(true);
+            }
+        };
+    }
 }
 \end{lstlisting}
 
 \section{Assignment - Bouncing ball}
-{\Huge TODO(find some assignment...)}
-Something using primitive graphics that moves it in a background thread.... like moving a ball around the phone...
-
+\begin{minipage}{0.4\textwidth}
+Given a \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/templates/lab2}{template} for a view that draws graphics and a class for ball movement, your task is to make the ball move indefinitely in a diagonal direction but never leaving the screen (bouncing when colliding with its edges). To redraw the graphics in the view and to update the position of the ball (ignoring collision), you can use their \texttt{update()} function. The ball provides several more function that could be useful. You should not change either class although you are free to change the ball's speed as long as both coordinated are non-zero. Updating the ball in a infinite loop on the UI thread will make Android think the app is not responding so you will have to update it from a thread but are free to use any approach discussed in this chapter.
+\end{minipage}
+\hspace{2cm}
+\begin{minipage}{0.4\textwidth}
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.6]{bouncing_ball.png}
+\caption{Bouncing ball}
+\label{fig:bball}
+\end{figure}
+\end{minipage}
 
 
 \begin{lstlisting}[style=A_XML]
@@ -606,5 +641,3 @@ public class MainActivity extends AppCompatActivity {
     }
 }
 \end{lstlisting}
-
-

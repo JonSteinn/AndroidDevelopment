@@ -2,4 +2,7 @@
     <string name="app_name">Lab</string>
     <string name="click_me">click me</string>
     <string name="error">Error</string>
+    <string name="download_task">Downloading</string>
+    <string name="download_fail">Download error</string>
+    <string name="download_success">Download complete</string>
 </resources>
