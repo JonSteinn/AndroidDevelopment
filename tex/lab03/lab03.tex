@@ -6,6 +6,13 @@
 
 
 \section{Activities}
+We have already used an activity without going into too much detail what it is. An activity is a single screen unit (usually full screen) with an user interface. We have so far worked with a single activity but an Android app can have multiple activities. It breaks the app up into section with different purpose and UI for example a menu in an email app could be an activity while composing an email might be another, opened from the menu.\\
+
+One activity serves as a luncher activity. It is our starting point when running the app (opposed to a C++ main function) and from there on we can start navigating to other activities if any. Every app must have a luncher activity. All activities must be declared in our app's manifest \footnote{Android Studio does this automatically when an activity is created} and the luncher activity is also determined there.\\
+
+Each activity uses a layout file that defines their UI at leat partially (some of it may be done dynamically in Java). In the \texttt{onCreate} function we have been setting 
+
+
 \section{Fractions}
 \section{Services}
 
