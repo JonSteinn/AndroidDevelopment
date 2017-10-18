@@ -1,4 +1,4 @@
-\graphicspath{{./lab02/Images/}}
+\graphicspath{{./lab03/Images/}}
 
 
 \maketitlepage{App Development}{in Android Studio}{Lab 3: Components}
@@ -6,14 +6,31 @@
 
 
 \section{Activities}
-We have already used an activity without going into too much detail what it is. An activity is a single screen unit (usually full screen) with an user interface. We have so far worked with a single activity but an Android app can have multiple activities. It breaks the app up into section with different purpose and UI for example a menu in an email app could be an activity while composing an email might be another, opened from the menu.\\
+We have already used an activity without going into too much detail what it is. An activity is a single screen unit (usually full screen) with an user interface. So far we have only worked with a single activity but an Android app can have multiple activities. It breaks the app up into section with different purpose and UI. For example, a menu in an email app could be an activity while composing an email might be another, opened from the menu.\\
 
-One activity serves as a luncher activity. It is our starting point when running the app (opposed to a C++ main function) and from there on we can start navigating to other activities if any. Every app must have a luncher activity. All activities must be declared in our app's manifest \footnote{Android Studio does this automatically when an activity is created} and the luncher activity is also determined there.\\
+One activity serves as a luncher activity. It is our starting point when running the app (opposed to a C\texttt{++} main function) and from there on we can start navigating to other activities if any. Every app must have a luncher activity. All activities must be declared in our app's manifest\footnote{Android Studio does this automatically when an activity is created} and the luncher activity is also determined there.\\
 
-Each activity uses a layout file that defines their UI at leat partially (some of it may be done dynamically in Java). In the \texttt{onCreate} function we have been setting 
+Each activity uses a layout file that defines their UI at leat partially (some of it may be done dynamically in Java). In the \texttt{onCreate} function we have been setting the activity's layout with the \texttt{setContentView} method. Activities can share layouts although it serves a limited purpose unless most of the UI is dynamic. We will look at better ways to share UI in Fragments.\\
+
+\subsection{Starting a new Activity}
+Lets start by creating a new activity with \menu{File > New > Activity > Empty Activity} and name it \texttt{SecondActivity} and leave the other options as they are. Before proceeding you should inspect your manifest. Add a button to the luncher activity which calls the method \texttt{clicked()} upon being clicked and add some text to the second activity so it differentiates from the other one. Finally add the following method to the luncher activity and run the progam.
+
+\begin{lstlisting}[style=A_Java]
+public void clicked(View view) {
+    startActivity(new Intent(MainActivity.this, SecondActivity.class));
+}	
+\end{lstlisting}
+
+The \texttt{startActivity} function takes \texttt{Intent} as a paramter. We will look at that class and its parameters in more detail later but for now, you can think of it as a bridge between two activities. 
+
+\subsection{Lifecycle}
+
+\subsection{Passing data between activities}
 
 
-\section{Fractions}
+
+
+\section{Fragments}
 \section{Services}
 
 \section{Assignment}
