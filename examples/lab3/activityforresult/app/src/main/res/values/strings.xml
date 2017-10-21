@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Lab</string>
+    <string name="msg_field">Enter message (no more than 6 chars)</string>
+    <string name="send_back">send back</string>
+    <string name="init_btn_msg">Click ME</string>
+</resources>

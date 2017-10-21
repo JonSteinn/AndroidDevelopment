@@ -224,7 +224,7 @@ Intent intent = getIntent();
 String value = intent.getStringExtra("SOME_KEY");
 \end{lstlisting}
 
-In listings \ref{listing:loginxml} and \ref{listing:loginjava} the first activity has a simple login UI with validation (using a simple hard coded list of accepted username and passwords) and if successful, we proceed to the next activity passing along the username for a personal greeting.
+In listings \ref{listing:loginxml} and \ref{listing:loginjava} the first activity has a simple login UI with validation (using a simple hard coded list of accepted username and passwords) and if successful, we proceed to the next activity passing along the username for a personal greeting. The source code can be found \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab3/login}{here}.
 
 \begin{lstlisting}[style=A_XML, caption={Layouts for simple login}, label={listing:loginxml}]
 <resources>
@@ -357,6 +357,108 @@ public class SecondActivity extends AppCompatActivity {
     }
 }
 \end{lstlisting}
+
+We might also want to get data to other way around, from a lunched activity to the activity the lunched it. For that we can use \texttt{startActivityForResult()} and the callback method \texttt{onActivityResult()}. Suppose we have two activities A and B where A lunches B and expects results. A must use a unique id for starting the activity B for results and check if it matches when the callback is invoked. The activity B must set results before finishing which involves the intent of data and a result code (can be custom) which the activity A can also check for.\\
+
+Listings \ref{listing:xmlforres} and \ref{listing:javaforres} show an app where the main activity contains just a single button which upon clicking starts the second activity for result. In the second activity there is an input field and a button for sending back the result (the text in the input field) and then destroying itself. The main activity then uses a callback to set the text of its button with the value passed by the second activity, given that the id and code match. The source code can be found \href{www.TODO.com}{here}.
+
+\begin{lstlisting}[style=A_XML, caption={Layout for start activity for result}, label={listing:xmlforres}]
+<resources>
+    <string name="app_name">Lab</string>
+    <string name="msg_field">Enter message (no more than 6 chars)</string>
+    <string name="send_back">send back</string>
+    <string name="init_btn_msg">Click ME</string>
+</resources>
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context="com.ru.droid.lab.MainActivity">
+    <Button
+        android:id="@+id/btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="50dp"
+        android:onClick="click"
+        android:text="@string/init_btn_msg"/>
+</LinearLayout>
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context="com.ru.droid.lab.SecondActivity">
+
+    <EditText
+        android:id="@+id/msg_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:maxLength="6"
+        android:textAlignment="center"
+        android:hint="@string/msg_field"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/send_back"
+        android:onClick="sendBackResults"/>
+</LinearLayout>
+\end{lstlisting}
+
+\begin{lstlisting}[style=A_Java, caption={Start activity for result}, label={listing:javaforres}]
+public class MainActivity extends AppCompatActivity {
+    private static final int REQ_ID = 1111;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+    }
+
+    public void click(View view) {
+        Intent intent = new Intent(this, SecondActivity.class);
+        startActivityForResult(intent, REQ_ID);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQ_ID) {
+            if (resultCode == RESULT_OK) {
+                String val = data.getStringExtra("MSG");
+                ((Button) findViewById(R.id.btn)).setText(val);
+            } else {
+                Toast.makeText(this, "ERROR", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+}
+
+public class SecondActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_second);
+    }
+
+    public void sendBackResults(View view) {
+        Intent intent = new Intent();
+        EditText msg = (EditText)findViewById(R.id.msg_id);
+        intent.putExtra("MSG", msg.getText().toString());
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+}
+\end{lstlisting}
+
+
 
 
 \section{Fragments}
