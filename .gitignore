@@ -18,6 +18,9 @@
 # *.ps
 # *.eps
 
+## Main pdf outout
+tex/main.pdf
+
 ## Bibliography auxiliary files (bibtex/biblatex/biber):
 *.bbl
 *.bcf

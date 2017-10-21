@@ -70,7 +70,7 @@ Using \texttt{Log.d} we can use printf debugging with certain tags and filter th
 \label{fig:logfilt}
 \end{figure}
 
-Using \texttt{Log.d} we can monitor the lifecycle of the two activities found in listings \ref{listing:twoactxml} and \ref{listing:twoactjava}. You should try various scenarios of navigating between the apps as well as rotating the screen and using the Android back button.
+Using \texttt{Log.d} we can monitor the lifecycle of the two activities found in listings \ref{listing:twoactxml} and \ref{listing:twoactjava} (the source code can be found \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab3/lifecycle}{here}). You should try various scenarios of navigating between the apps as well as rotating the screen and using the Android back button.
 
 \begin{lstlisting}[style=A_XML,caption={Two layouts for two activities},label={listing:twoactxml}]
 <?xml version="1.0" encoding="utf-8"?>
@@ -209,8 +209,154 @@ public class SecondActivity extends AppCompatActivity {
 
 
 \subsection{Passing data between activities}
+As we have already discussed, Intents are something of a bridge between activities. We used it to start a new activity but it can also be used to pass data between activities.
 
+\begin{lstlisting}[style=A_Java]
+Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+intent.put("SOME_KEY", "SOME_VALUE");
+startActivity(intent);
+\end{lstlisting}
 
+The parameter we are using here is an instance of the current activity and a \texttt{.class} of the activity we want to lunch. This is called a reflection and is provides a way to get metadata on classes during runtime. The Intent constructor is overloaded so these are not the only options for parameters. We can use \texttt{getIntent()} to access the intent in the newly lunched activity and depending on the data type, there are various methods to access values given keys.
+
+\begin{lstlisting}[style=A_Java]
+Intent intent = getIntent();
+String value = intent.getStringExtra("SOME_KEY");
+\end{lstlisting}
+
+In listings \ref{listing:loginxml} and \ref{listing:loginjava} the first activity has a simple login UI with validation (using a simple hard coded list of accepted username and passwords) and if successful, we proceed to the next activity passing along the username for a personal greeting.
+
+\begin{lstlisting}[style=A_XML, caption={Layouts for simple login}, label={listing:loginxml}]
+<resources>
+    <string name="app_name">Lab</string>
+    <string name="un_hint">Enter your username</string>
+    <string name="pw_hint">Enter your password</string>
+    <string name="login">Login</string>
+    <string name="welcome">Welcome</string>
+    <string name="required">Required</string>
+    <string name="incorrect">Incorrect</string>
+</resources>
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context="com.ru.droid.lab.MainActivity">
+    <EditText
+        android:id="@+id/username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="@string/un_hint"/>
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:ems="10"
+        android:inputType="textPassword"
+        android:hint="@string/pw_hint"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:text="@string/login"
+        android:onClick="attemptLogin"/>
+</LinearLayout>
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context="com.ru.droid.lab.SecondActivity">
+    <TextView
+        android:id="@+id/welcome_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</LinearLayout>
+\end{lstlisting}
+
+\begin{lstlisting}[style=A_JAVA, caption={A very simple login}, label={listing:loginjava}]
+public final class FakeDB {
+    private static Map<String, String> usersAndPasswords = new HashMap<>();
+    static {
+        usersAndPasswords.put("Max", "abcd");
+        usersAndPasswords.put("Mona", "1234");
+        usersAndPasswords.put("Vladimir", "Vodka");
+        usersAndPasswords.put("Nicole", "PV");
+        usersAndPasswords.put("Alfred", "IC");
+    }
+    public static boolean doesExist(String un) {
+        return usersAndPasswords.containsKey(un);
+    }
+    public static boolean correctPassword(String un, String pw) {
+        return usersAndPasswords.containsKey(un) && usersAndPasswords.get(un).equals(pw);
+    }
+    private FakeDB() {}
+}
+
+public class MainActivity extends AppCompatActivity {
+    private EditText username;
+    private EditText password;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        this.username = (EditText)findViewById(R.id.username);
+        this.password = (EditText)findViewById(R.id.password);
+    }
+
+    public void attemptLogin(View view) {
+        String un = username.getText().toString();
+        String pw = password.getText().toString();
+        if (un.trim().length() == 0) {
+            username.requestFocus();
+            username.setError(getResources().getString(R.string.required));
+        } else if (!FakeDB.doesExist(un)) {
+            username.requestFocus();
+            username.setError(getResources().getString(R.string.incorrect));
+        } else if (pw.trim().length() == 0) {
+            password.requestFocus();
+            password.setError(getResources().getString(R.string.required));
+        } else if (!FakeDB.correctPassword(un, pw)) {
+            password.requestFocus();
+            password.setError(getResources().getString(R.string.incorrect));
+        } else {
+            Intent intent = new Intent(this, SecondActivity.class);
+            intent.putExtra("USER_NAME", un);
+            startActivity(intent);
+            finish();
+        }
+    }
+}
+
+public class SecondActivity extends AppCompatActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_second);
+
+        Intent intent = getIntent();
+        String un = intent.getStringExtra("USER_NAME");
+
+        String msg = getResources().getString(R.string.welcome) + ", " + un;
+        ((TextView)findViewById(R.id.welcome_text)).setText(msg);
+    }
+}
+\end{lstlisting}
 
 
 \section{Fragments}

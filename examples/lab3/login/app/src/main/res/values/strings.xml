@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Lab</string>
+    <string name="un_hint">Enter your username</string>
+    <string name="pw_hint">Enter your password</string>
+    <string name="login">Login</string>
+    <string name="welcome">Welcome</string>
+    <string name="required">Required</string>
+    <string name="incorrect">Incorrect</string>
+</resources>
