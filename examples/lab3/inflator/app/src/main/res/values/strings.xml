@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Lab</string>
+    <string name="team_name">Club: %s</string>
+    <string name="team_epl">EPL titles: %s</string>
+    <string name="team_cl">CL titles: %s</string>
+</resources>

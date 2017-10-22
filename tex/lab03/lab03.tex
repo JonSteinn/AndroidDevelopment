@@ -360,7 +360,7 @@ public class SecondActivity extends AppCompatActivity {
 
 We might also want to get data to other way around, from a lunched activity to the activity the lunched it. For that we can use \texttt{startActivityForResult()} and the callback method \texttt{onActivityResult()}. Suppose we have two activities A and B where A lunches B and expects results. A must use a unique id for starting the activity B for results and check if it matches when the callback is invoked. The activity B must set results before finishing which involves the intent of data and a result code (can be custom) which the activity A can also check for.\\
 
-Listings \ref{listing:xmlforres} and \ref{listing:javaforres} show an app where the main activity contains just a single button which upon clicking starts the second activity for result. In the second activity there is an input field and a button for sending back the result (the text in the input field) and then destroying itself. The main activity then uses a callback to set the text of its button with the value passed by the second activity, given that the id and code match. The source code can be found \href{www.TODO.com}{here}.
+Listings \ref{listing:xmlforres} and \ref{listing:javaforres} show an app where the main activity contains just a single button which upon clicking starts the second activity for result. In the second activity there is an input field and a button for sending back the result (the text in the input field) and then destroying itself. The main activity then uses a callback to set the text of its button with the value passed by the second activity, given that the id and code match. The source code can be found \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab3/activityforresult}{here}.
 
 \begin{lstlisting}[style=A_XML, caption={Layout for start activity for result}, label={listing:xmlforres}]
 <resources>
@@ -458,10 +458,177 @@ public class SecondActivity extends AppCompatActivity {
 }
 \end{lstlisting}
 
+\section{Layout inflater}
+Before we look into fragments, we will take a look at another way of re-using code using layout inflaters. Suppose we want to multiple instances of the same partial layout on our screen like can be seen in figure \ref{fig:infldem}, it would be very tedious to write seperate views and code for all of them, especially if they become complicated. 
 
+\begin{figure}[H]
+\centering
+\includegraphics[scale=.5]{inflate_demo.png}
+\caption{Same layout used 3 times with layout inflater}
+\label{fig:infldem}
+\end{figure}
 
+To re-use a layout, we can use what is called a layout inflater. Start by creating a new layout resource file by right clicking on your layout folder and selecting \menu{New > New resource file} and name it \texttt{team.xml}. In it we will create a layout for a single team as seen in figure \ref{fig:infldem}. The XML can be seen in listing \ref{listing:xmlinfldem}. Note that the main layout has an id but and some attributes set but has no children so nothing would be visible here unless we make it so in Java.
 
-\section{Fragments}
+\begin{lstlisting}[style=A_XML, caption={XML for inflater demo}, label={listing:xmlinfldem}]
+<!-- Activity's layout -->
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context="com.ru.droid.lab.MainActivity">
+</LinearLayout>
+
+<!-- team.xml -->
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/team_outer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical">
+    <ImageButton
+        android:id="@+id/team_img"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:scaleType="fitXY"/>
+    <LinearLayout
+        android:id="@+id/team_inner_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/team_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/team_epl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/team_cl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</LinearLayout>
+
+<!-- String with formats! -->
+<resources>
+    <string name="app_name">Lab</string>
+    <string name="team_name">Club: %s</string>
+    <string name="team_epl">EPL titles: %s</string>
+    <string name="team_cl">CL titles: %s</string>
+</resources>
+\end{lstlisting}
+
+In this example we have 3 figures in the drawable folder called \texttt{afc.jpg}, \texttt{lfc.jpg} and \texttt{mufc.jpg}. We also provide a fake database that gives us the option of iterating over all images.
+
+\begin{lstlisting}[style=A_Java]
+public final class FakeDB {
+    private static Map<Integer, TeamInfo> imageDetail;
+    private static void init() {
+        if (imageDetail == null) {
+            imageDetail = new HashMap<>();
+            imageDetail.put(R.drawable.afc,
+                    new TeamInfo("Arsenal FC", 13, 0));
+            imageDetail.put(R.drawable.lfc,
+                    new TeamInfo("Liverpool FC", 18, 5));
+            imageDetail.put(R.drawable.mufc,
+                    new TeamInfo("Manchester United", 20, 3));
+        }
+    }
+    public static Iterable<Map.Entry<Integer, TeamInfo>> getAllImages() {
+        init();
+        return imageDetail.entrySet();
+    }
+}
+
+public final class TeamInfo {
+    private String name;
+    private String eplTitles;
+    private String clTitles;
+    public TeamInfo(String name, int epl, int cl) {
+        this.name = name;
+        this.eplTitles = Integer.toString(epl);
+        this.clTitles = Integer.toString(cl);
+    }
+    public String getName() {
+        return this.name;
+    }
+    public String getEplTitles() {
+        return this.eplTitles;
+    }
+    public String getClTitles() {
+        return this.clTitles;
+    }
+}
+\end{lstlisting}
+
+Now we can implement our activity to populate its layout with inflated views created from our layout resource.
+
+\begin{lstlisting}[style=A_Java, caption={Layout inflation in Java}, label={listing:javainfl}]]
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        populateLayout();
+    }
+
+    private void populateLayout() {
+        LinearLayout root = (LinearLayout)findViewById(R.id.root_view);
+        for (Map.Entry<Integer, TeamInfo> info : FakeDB.getAllImages()) {
+            addNewTeam(root, info.getKey(), info.getValue());
+        }
+    }
+
+    private void addNewTeam(LinearLayout parent,
+                            final int img, final TeamInfo info) {
+
+        // Create new view with inflate
+        View team = View.inflate(this, R.layout.team, null);
+
+        // Set button image source and on click listener
+        ImageButton btn = (ImageButton)team.findViewById(R.id.team_img);
+        btn.setImageResource(img);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, info.getName(),
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        Resources res = getResources();
+
+        // Set club's name using resource string format
+        TextView name = (TextView)team.findViewById(R.id.team_title);
+        name.setText(res.getString(R.string.team_name, info.getName()));
+
+        // Set club's epl title count using resource string format
+        TextView epl = (TextView)team.findViewById(R.id.team_epl);
+        epl.setText(res.getString(R.string.team_epl, info.getEplTitles()));
+
+        // Set club's cl title count using resource string format
+        TextView cl = (TextView)team.findViewById(R.id.team_cl);
+        cl.setText(res.getString(R.string.team_cl, info.getClTitles()));
+
+        // Add the view to our root view group
+        parent.addView(team);
+
+    }
+}
+\end{lstlisting}
+
+Note that we are not using \texttt{findViewById} from our current instance but rather using the template view and searching for them within it. The source code for this example is available \href{www.todo.com}{here}.
+
+\section{Frgments}
+
 \section{Services}
 
 \section{Assignment}
