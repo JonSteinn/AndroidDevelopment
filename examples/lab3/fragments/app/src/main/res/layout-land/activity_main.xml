@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <fragment
+        android:id="@+id/c_frag_land"
+        android:name="com.ru.droid.lab.fragments.ChooseFragment"
+        tools:layout="@layout/fragment_choose"
+        android:layout_weight="0.5"
+        android:layout_width="0dp"
+        android:layout_height="match_parent">
+    </fragment>
+
+    <fragment
+        android:id="@+id/ss_frag_land"
+        android:name="com.ru.droid.lab.fragments.ScreenshotFragment"
+        tools:layout="@layout/fragment_screenshot"
+        android:layout_weight="0.5"
+        android:layout_width="0dp"
+        android:layout_height="match_parent">
+    </fragment>
+</LinearLayout>

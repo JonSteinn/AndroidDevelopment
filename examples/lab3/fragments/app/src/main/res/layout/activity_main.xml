@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.ru.droid.lab.activities.MainActivity">
+    <fragment
+        android:id="@+id/c_frag"
+        android:name="com.ru.droid.lab.fragments.ChooseFragment"
+        tools:layout="@layout/fragment_choose"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </fragment>
+</FrameLayout>
