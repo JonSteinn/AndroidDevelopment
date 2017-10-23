@@ -3,7 +3,7 @@ import subprocess
 from shutil import copyfile
 
 # re-visit ef > 9
-s = "\\input{{settings.tex}}\r\n\\begin{{document}}\r\n\input{{lab0{0}/lab0{0}.tex}}\r\n\\end{{document}}"
+s = "\\input{{settings.tex}}\n\\begin{{document}}\n\input{{lab0{0}/lab0{0}.tex}}\n\\end{{document}}"
 labs_count = 4
 
 
