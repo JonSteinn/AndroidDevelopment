@@ -31,9 +31,7 @@ public class ChooseFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedState) {
         super.onActivityCreated(savedState);
-
-        Activity a = getActivity();
-        setOnClickListeners(a);
+        setOnClickListeners(getActivity());
     }
 
     private void setOnClickListeners(final Activity a) {
