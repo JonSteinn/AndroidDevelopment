@@ -16,6 +16,10 @@ public final class FakeDB {
             screenshotIDs.put(R.id.btn_dung, new Data(R.drawable.dungeon_keeper_ss, "Dungeon Keeper"));
         }
     }
+    public static Iterable<Integer> getButtons() {
+        init();
+        return screenshotIDs.keySet();
+    }
     public static Data getScreenshot(int id) {
         init();
         return screenshotIDs.get(id);

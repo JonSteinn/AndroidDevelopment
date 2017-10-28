@@ -2,10 +2,10 @@ package com.ru.droid.lab.fragments;
 
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +16,7 @@ import com.ru.droid.lab.db.Data;
 import com.ru.droid.lab.db.FakeDB;
 
 public class ChooseFragment extends Fragment {
-
-
-    public ChooseFragment() {
-    }
-
+    public ChooseFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -35,30 +31,9 @@ public class ChooseFragment extends Fragment {
     }
 
     private void setOnClickListeners(final Activity a) {
-        a.findViewById(R.id.btn_carma).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imageClick(v, a);
-            }
-        });
-        a.findViewById(R.id.btn_dung).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imageClick(v, a);
-            }
-        });
-        a.findViewById(R.id.btn_mdk).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imageClick(v, a);
-            }
-        });
-        a.findViewById(R.id.btn_jazz).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imageClick(v, a);
-            }
-        });
+        for (Integer btnId : FakeDB.getButtons()) {
+            a.findViewById(btnId).setOnClickListener(v -> imageClick(v, a));
+        }
     }
 
     private void imageClick(View v, Activity a) {
@@ -69,7 +44,8 @@ public class ChooseFragment extends Fragment {
             intent.putExtra("SCREENSHOT_TITLE", d.getScreenShotTitle());
             a.startActivity(intent);
         } else {
-            ScreenshotFragment ssf = (ScreenshotFragment)getFragmentManager().findFragmentById(R.id.ss_frag_land);
+            ScreenshotFragment ssf = (ScreenshotFragment)getFragmentManager()
+                    .findFragmentById(R.id.ss_frag_land);
             ssf.setScreenShot(a, d.getScreenShotId(), d.getScreenShotTitle());
         }
     }
@@ -78,5 +54,4 @@ public class ChooseFragment extends Fragment {
         return a.getResources().getConfiguration().orientation
                 == Configuration.ORIENTATION_PORTRAIT;
     }
-
 }
