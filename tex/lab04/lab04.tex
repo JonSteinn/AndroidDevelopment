@@ -1,0 +1,106 @@
+\graphicspath{{./lab03/Images/}}
+
+
+\maketitlepage{App Development}{in Android Studio}{Lab 4: Using Web APIs}
+\maketocpage
+
+\section{JSON}
+JSON stands for JavaScript Object Notation. It is a human readable data format storing its data in key-value pairs. All its keys must be strings but the values can be strings, numerical values, other JSON objects, arrays, boolean values or even null. Key and value are seperated by a colon while key-value pairs are seperated by a comma. A JSON object must be wrapped in curly brackets. An example of a JSON would be
+\begin{lstlisting}[style=A_JAVA]
+{
+	"name": "John",
+	"age": 30,
+	"courses": ["math", "programming"],
+	"contact": {
+		"phone": "9915311",
+		"email": "john@mail.com"
+	}
+}
+\end{lstlisting}
+For those familiar with Python, this looks just like a literal dictionary although the values are more restricted in JSON. Even though no literal Map in Java exists, the functionality is still similar to \texttt{Map<String,Ojbect>}, again with a much more restricted \texttt{Object}. The main purpose of JSON in this course is to get data from a REST API but it has other purposes in general.
+
+\subsection{JSONObject API}
+The \texttt{JSONObject} class supports creating JSON objects from strings.
+\begin{lstlisting}[style=A_Java]
+String jsonString = "{" +
+        "\"name\": \"John\"," + 
+        "\"age\": 30," +
+        "\"courses\": [\"math\", \"programming\"]," +
+        "\"contact\": {\"phone\": \"9915311\", \"email\": \"john@mail.com\"}" +
+"}";
+try {
+    JSONObject jsonObject = new JSONObject(jsonString);
+} catch (JSONException e) {
+    e.printStackTrace();
+}
+\end{lstlisting}
+We can now parse this \texttt{JSONObject} but in order to do so, we must know the keys for any value we might want as well as the type of their corresponding value. We can parse the \texttt{JSONObject} above into Java types with the following code.
+\begin{lstlisting}[style=A_Java]
+try {
+    JSONObject jsonObject = new JSONObject(jsonString);
+    String name = jsonObject.getString("name");
+    int age = jsonObject.getInt("age");
+    JSONArray jsonArray = jsonObject.getJSONArray("courses");
+    String course0 = jsonArray.getString(0);
+    String course1 = jsonArray.getString(1);
+    JSONObject nestedJsonObject = jsonObject.getJSONObject("contact");
+    String phone = nestedJsonObject.getString("phone");
+    String email = nestedJsonObject.getString("email");
+} catch (JSONException e) {
+    e.printStackTrace();
+}
+\end{lstlisting}
+Another way to construct a JSON object is to create an initially empty object and add to it manually, like in the following code.
+\begin{lstlisting}[style=A_Java]
+try {
+    JSONObject jsonObject = new JSONObject();
+    jsonObject.put("key", "value");
+    jsonObject.put("valid", false);
+} catch (JSONException e) {
+    e.printStackTrace();
+}
+\end{lstlisting}
+
+\subsection{Gson API}
+\texttt{Gson} is a library from Google that can convert Java objects into JSON and vice versa. Add
+\begin{center}\texttt{compile group: 'com.google.code.gson', name: 'gson', version: '2.8.2'}\end{center}
+to dependencies to use it (use the current version).\\
+
+Suppose we have the following class
+\begin{lstlisting}[style=A_Java]
+public class Person {
+	String id;
+	String name;
+	int age;
+	public Person(String id, String name, int age) {
+		this.id = id;
+		this.name = name;
+		this.age = age;
+	}
+}
+\end{lstlisting}
+We can use \texttt{Gson} to construct a JSON object with an instance of this class where the keys are the name of its field and their values are the value of the instance. Having a object instance variable will result in a nested JSON object.
+\begin{lstlisting}[style=A_Java]
+Gson gson = new Gson();
+Person person = new Person("A341#5_X", "Mortimer", 99);
+String jsonPerson = gson.toJson(person);
+// outcome: {"id": "A341#5_X", "name": "Mortimer", "age": 99}
+\end{lstlisting}
+To convert the other way around we can use reflection. Note that any missing field in the JSON object will be set to its default value and excessive keys will be ignored.
+\begin{lstlisting}[style=A_Java]
+Gson gson = new Gson();
+String jsonString = "{\"id\": \"1A\", \"name\": \"Lisa\", \"age\": 45}"
+Person person = gson.fromJson(jsonString, Person.class);
+\end{lstlisting}
+Like \texttt{JSONObject}, \texttt{gson} can also be used to add key-value pairs one by one to an intially empty JSON object.
+\begin{lstlisting}[style=A_Java]
+JsonObject jsonObject = new JsonObject();
+jsonObject.addProperty("Key", "value");
+\end{lstlisting}
+
+\section{Calling web servers}
+There are multiple ways to call a web server. It can be done using only Java standard library but that can be somewhat tedious having to build a client from scratch and use threading so we will use a library called \href{https://github.com/koush/ion}{ion}, a asynchronous networking and image loading library. 
+
+
+\section{Creating a simple Web API}
+\section{Assignment}
