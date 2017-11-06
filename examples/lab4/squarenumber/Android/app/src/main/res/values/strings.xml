@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Lab</string>
+    <string name="err">ERROR</string>
+    <string name="sq">Squared</string>
+    <string name="conn_err">Connection error</string>
+    <string name="num_err">Invalid number</string>
+</resources>
