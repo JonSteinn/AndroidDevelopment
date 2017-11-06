@@ -18,13 +18,16 @@ public class MainActivity extends AppCompatActivity {
         if (((RadioButton)view).isChecked()) {
             switch (view.getId()) {
                 case R.id.r1:
-                    Toast.makeText(MainActivity.this, R.string.a, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this,
+                            R.string.a, Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.r2:
-                    Toast.makeText(MainActivity.this, R.string.b, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this,
+                            R.string.b, Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.r3:
-                    Toast.makeText(MainActivity.this, R.string.c, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this,
+                            R.string.c, Toast.LENGTH_SHORT).show();
                     break;
             }
         }

@@ -3,9 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    tools:context="com.ru.droid.lab.MainActivity"
     android:orientation="vertical"
-    android:gravity="center"
-    tools:context="com.ru.droid.lab.MainActivity">
+    android:gravity="center">
+
 
     <RadioGroup
         android:layout_margin="15dp"
