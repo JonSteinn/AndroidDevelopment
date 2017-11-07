@@ -5,7 +5,7 @@
 \maketocpage
 
 \section{JSON}
-JSON stands for JavaScript Object Notation. It is a human readable data format storing its data in key-value pairs. All its keys must be strings but the values can be strings, numerical values, other JSON objects, arrays, boolean values or even null. Key and value are seperated by a colon while key-value pairs are seperated by a comma. A JSON object must be wrapped in curly brackets. An example of a JSON would be
+JSON stands for JavaScript Object Notation. It is a human readable data format storing its data in key-value pairs. All its keys must be strings but the values can be strings, numerical values, other JSON objects, arrays, boolean values or even null. Keys and values are seperated by a colon while key-value pairs are seperated by a comma. A JSON object must be wrapped in curly brackets. An example of a JSON would be the following.
 \begin{lstlisting}[style=A_JAVA]
 {
 	"name": "John",
@@ -17,7 +17,7 @@ JSON stands for JavaScript Object Notation. It is a human readable data format s
 	}
 }
 \end{lstlisting}
-For those familiar with Python, this looks just like a literal dictionary although the values are more restricted in JSON. Even though no literal Map in Java exists, the functionality is still similar to \texttt{Map<String,Ojbect>}, again with a much more restricted \texttt{Object}. The main purpose of JSON in this course is to get data from a REST API but it has other purposes in general.
+For those familiar with Python, this looks just like a literal dictionary although the keys and values are more restricted in JSON. The main purpose of JSON in this course is to get data from REST APIs but it has other purposes in general.
 
 \subsection{JSONObject API}
 The \texttt{JSONObject} class supports creating JSON objects from strings.
@@ -62,10 +62,8 @@ try {
 \end{lstlisting}
 
 \subsection{Gson API}
-\texttt{Gson} is a library from Google that can convert Java objects into JSON and vice versa. Add
+\texttt{Gson} is a library from Google that can convert Java objects into JSON and vice versa. Add the following to dependencies.
 \begin{center}\texttt{compile group: 'com.google.code.gson', name: 'gson', version: '2.8.2'}\end{center}
-to dependencies to use it (use the current version).\\
-
 Suppose we have the following class
 \begin{lstlisting}[style=A_Java]
 public class Person {
@@ -79,7 +77,7 @@ public class Person {
 	}
 }
 \end{lstlisting}
-We can use \texttt{Gson} to construct a JSON object with an instance of this class where the keys are the name of its field and their values are the value of the instance. Having a object instance variable will result in a nested JSON object.
+We can use \texttt{Gson} to construct a JSON object with an instance of this class where the keys are the name of its field and their values are the value of the instance. Having reference instance variable will result in a nested JSON object (given they are not String or arrays).
 \begin{lstlisting}[style=A_Java]
 Gson gson = new Gson();
 Person person = new Person("A341#5_X", "Mortimer", 99);
@@ -99,9 +97,9 @@ jsonObject.addProperty("Key", "value");
 \end{lstlisting}
 
 \section{Calling web servers}
-There are multiple ways to call a web server. It can be done using only Java standard library but that can be somewhat tedious having to build a client from scratch and use threading so we will use a library called \href{https://github.com/koush/ion}{ion}, a asynchronous networking and image loading library.\\
+There are multiple ways to call a web server. It can be done using only Java standard library but that can be somewhat tedious having to build a client from scratch and use threading so we will use a library called \href{https://github.com/koush/ion}{ion}, an asynchronous networking and image loading library.\\
 
-There are a lot of web servers out there and one will have to read about how to use them before doing so. Some provide means up getting data, uploading data, getting data based on input and so on. Others may requires keys or authentication. It will be your job to familiarize yourself with the webserver you want to use. The first example we will look at is a simple get request to the Chuck Norris API. Upon a click we get a joke and update some textview with it. To get a response for our API request, we can use the following given that we want the result as a string (other option include byte array or \texttt{Gson}'s JSON object).
+There are a lot of web servers out there and one will have to read their documentation to use them. Some provide means up getting data, uploading data, getting data based on input and so on. Others may requires keys or authentication. It will be your job to familiarize yourself with the webserver you want to use. The first example we will look at is a simple get request to the Chuck Norris API. Upon a click we get a joke and update some textview with it. To get a response for our API request, we can use the following given that we want the result as a string (other option include byte array or a \texttt{Gson} JSON object).
 \begin{lstlisting}[style=A_Java]
 Ion.with(/* your activity's context */)
         .load(/* url as string */)
@@ -113,11 +111,11 @@ Ion.with(/* your activity's context */)
             }
 });
 \end{lstlisting}
-There are various options available such as setting body (which essentialy makes this a post request), timeouts and if everything goes as expected, the exception parameter \texttt{e} should be \texttt{null}. If not, you should handle the exception appropriately (errors such as timeouts or invalid urls). The source code for the Chuck Norris example can be found \href{www.todo.com}{here}.\\
+There are various options available such as setting headers, body (for post requests), timeouts and if everything goes as expected, the exception parameter \texttt{e} should be \texttt{null}. If not, you should handle the exception appropriately (errors such as timeouts or invalid urls). The source code for the Chuck Norris example can be found \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab4/chucknorris}{here} and a programming session making it \href{TODO}{here}.\\
 
 
 \section{Creating a simple Web API (Optional)}
-One approach to writing apps is to keep the logic stored on a webserver making Android do little more than update UI on events and serve as a client to the webserver. This way it is easy to extend your app to another platform. Now we will look at creating a very simple webserver with Flask. Feel free to adopt this to any other framework if you have prior knowledge of webservers or if you have some other preferences over using python. The source code can be found \href{www.todo.com}{here}.
+One approach to writing apps is to keep the logic stored on a webserver making Android do little more than update UI on events and serve as a client to the webserver. This way it is easy to extend your app to another platform. Now we will look at creating a very simple webserver with Flask. Feel free to adopt this to any other framework if you have prior knowledge of webservers or if you have some other preferences over using python. Note that the localhost of the emulator, your phone and your computer are not the same so having a webserver running on your localhost on your computer can not be accessed that way from the emulator or the phone. The emulator can us IP address \texttt{10.0.2.2} while you would probably have to deploy the server to use for your actual phone. In the provided example we create a very webserver that returns the square of a number. Note that you need \href{https://www.python.org/downloads/}{Python} and \href{http://flask.pocoo.org}{Flask} to run the server. The source code can be found \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab4/squarenumber}{here}, the programming session \href{TODO}{here} and a guide how one can deploy the webserver \href{TODO}{here}.
 
 \section{Assignment}
 
@@ -135,5 +133,5 @@ Ion.with(this)
 \end{lstlisting}
 
 \subsection{Option B}
-Edit the square number API (or make one from scratch in another framework) so it accepts a post request with a JSON object with the number as data. You must also update the Android app to send a post request instead of a get request.
+Edit the square number API (or make one from scratch in another framework) so it accepts a post request with a JSON object with the number as data. You must also update the Android app to send a post request instead of a get request. It should then respond with another JSON object with the number squared.
 

@@ -3,7 +3,7 @@ from flask import Flask, jsonify
 app = Flask(__name__)
 
 
-@app.route('number', methods=['GET'])
+@app.route('/<number>', methods=['GET'])
 def hello_world(number)
     dictionary = {}
     if number.isdigit()
