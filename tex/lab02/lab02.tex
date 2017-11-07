@@ -5,7 +5,7 @@
 \maketocpage
 
 \section{Java Threads}
-This section offers a brief introduction to threading in Java but anyone with prior knowledge is free to skip to the next section. Note that we are using the Java JDK $8+$ in this part. 
+This section offers a brief introduction to threading in Java but anyone with prior knowledge is free to skip to the next section. The source code for all code examples is available \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab2/javathreads}{here} and a programming session \href{TODO}{here}.
 
 \begin{table}[H]
 \center
@@ -22,9 +22,8 @@ method & functionality \\
 \label{table:tapi}
 \end{table}
 
-Threads, in its simplest form, are a way to execute two (or more) blocks of code at the same time while sharing certain resources. Each thread executes a run method, line by line, and once started, we have limited control over the order of which thread is being executed\footnote{A context switch is when an operating system switches execution from one thread to another}. In listing \ref{listing:tord} we have three threads, the thread that starts the other two (the main thread) which will print \texttt{X} and \texttt{thread1} and \texttt{thread2}, printing \texttt{A} and \texttt{1} respectively. Running this program produces an nondeterministic output, in fact all possible permutations of \texttt{A}, \texttt{1} and \texttt{X} can be printed.
-
-\begin{lstlisting}[style=A_Java, caption={\href{https://github.com/JonSteinn/AndroidDevelopment/blob/master/examples/lab2/javathreads/1/Main.java}{Order of thread execution}}, label={listing:tord}]
+Threads, in its simplest form, are a way to execute two (or more) blocks of code at the same time while sharing certain resources. Each thread executes a run method, line by line, and once started, we have limited control over the order of which thread is being executed\footnote{A context switch is when an operating system switches execution from one thread to another}. In the following we have three threads, the thread that starts the other two (the main thread) which will print \texttt{X} and \texttt{thread1} and \texttt{thread2}, printing \texttt{A} and \texttt{1} respectively. Running this program produces an nondeterministic output, in fact all possible permutations of \texttt{A}, \texttt{1} and \texttt{X} can be printed.
+\begin{lstlisting}[style=A_Java]
 public static void main(String[] args) {
     Thread thread1 = new Thread(() -> System.out.print("A"));
     Thread thread2 = new Thread(() -> System.out.print("1"));
@@ -33,10 +32,8 @@ public static void main(String[] args) {
     System.out.print("X");
 }
 \end{lstlisting}
-
-One reason to use threads is to keep an UI from locking while a long task is happening in the background. Listing \ref{listing:infoui} starts a thread and keeps the user informed that the background job is still running. A more familiar version of this idea is a spinning wheel for the user to look at while he waits.
-
-\begin{lstlisting}[style=A_Java, caption={\href{https://github.com/JonSteinn/AndroidDevelopment/blob/master/examples/lab2/javathreads/2/Main.java}{UI keeping user informed on progress}}, label={listing:infoui}]
+One reason to use threads is to keep an UI from locking while a long task is happening in the background. Here we see a task being run in the background while the main thread keeps the user informed. A more familiar version of this idea is a spinning wheel for the user to look at while he waits.
+\begin{lstlisting}[style=A_Java]
 public class Main {
     public static void main(String[] args) {
         try {
@@ -45,7 +42,7 @@ public class Main {
             carpenter.start();
             while (true) {
                 System.out.println("Work in progress...");
-                carpenter.join(500);
+                carpenter.join(500); // wait 0.5s for thread to finish
                 if (carpenter.isAlive()) continue;
                 System.out.println("Work complete");
                 break;
@@ -60,12 +57,10 @@ public class Main {
     }
 }
 \end{lstlisting}
+A race conditions can occur when two threads access and edit the same resource in an unexpected order. Suppose thread A and B are both running and their job is to increment a shared variable X, which is set as 0. Thread A loads the value of X as 0 into registry when a context switch occurs and thread B loads the value of X into registry as 0 too, then B adds one and stores the value in X before another context switch when thread A does the same, both adding 1 to 0, so the variable ends up as 1, not 2. The part of the code where race conditions can occur is called a critical section. We must pay close attention to them when dealing with threads.\\
 
-A race conditions can occur when two threads access and edit the same resource in an unexpected order. Suppose thread A and B are both running and their job is to increment a shared variable X, which is set as 0. Thread A loads the value of X as 0 into registry when a context switch occurs and thread B loads the value of X into registry as 0 too, then B adds one and stores the value in X before another context switch when thread A does the same, both adding 1 to 1, so the variable ends up as 1, not 2. The part of the code where race conditions can occur is called a critical section. We must pay close attention to them when dealing with threads.\\
-
-In listing \ref{listing:rcon} we start a thousand threads that increment two variables which are initially equal and then check if they are still equal, upon which they increment a counter. A sequential run of such a program would always increment the variable but what can happen here is that thread $i$ is running and has just incremented the variable \texttt{a} when a context switch occurs and thread $j$ starts to run which now increments \texttt{a} again and then \texttt{b} and when done, checks if they are equal which they are not since thread $i$ only incremented \texttt{a} so $j$ will not increment the counter variable. Of course we can get lucky and everything happens in the correct order, even most of the time, but a slim chance of a race condition is all that is needed to make an entire program ruined.  
-
-\begin{lstlisting}[style=A_Java, caption={\href{https://github.com/JonSteinn/AndroidDevelopment/blob/master/examples/lab2/javathreads/3/Main.java}{Race condition}}, label={listing:rcon}]
+In the program below we start thousand threads that increment two variables which are initially equal and then check if they are still equal, upon which we increment a counter. A sequential run of such a program would always increment the variable one at a time, check if they are equal which they will always be and then increment the counter, resulting in him being 1000 at the end. What can happen here is that thread $i$ is running and has just incremented the variable \texttt{a} when a context switch occurs and thread $j$ starts to run which now increments \texttt{a} again and then \texttt{b} and when done, checks if they are equal which they are not since thread $i$ only incremented \texttt{a} so $j$ will not increment the counter variable. Of course we can get lucky and everything happens in the correct order, even most of the time, but a slim chance of a race condition is all that is needed to make an entire program ruined.  
+\begin{lstlisting}[style=A_Java]
 public class Main {
     private static int counter = 0, a = 0, b = 0;
     public static void main(String[] args) {
@@ -85,9 +80,7 @@ public class Main {
     }
 }
 \end{lstlisting}
-
-To deal with race conditions, we can identify the critical section and make sure that only one thread can operate there at any given time. That does however come at the cost of execution speed so we must place such lockouts wisely. When some thread arrives at a critical section, it should either be locked and make the thread wait or as soon as the thread 'steps in', the section should lock other threads out, until the current one is done. This can be done with the Java keyword \verb!synchronized!. Synchronized methods can only be run by one thread at a time. Another approach is to use a mutex. One can think of a mutex like a single key which you must acquire to reach a critical section but once used, no one else can use it until the current key user has returned it after leaving the critical section. In Java, mutexes are instances of the class \texttt{Semaphore}, a more general case of a mutex for arbitrary number of keys (even a negative amount!). Using a Semaphore initialized with a key count of 1, the \href{https://github.com/JonSteinn/AndroidDevelopment/blob/master/examples/lab2/javathreads/4/Main.java}{following mutex} will fix our race condition even though, locking the entire part of a thread does not make good use of them.
-
+To deal with race conditions, we can identify the critical section and make sure that only one thread can operate there at any given time. That does however come at the cost of execution speed so we must place such lockouts wisely. When some thread arrives at a critical section, it should either be locked and make the thread wait or as soon as the thread 'steps in', the section should lock other threads out, until the current one is done. This can be done with the Java keyword \verb!synchronized!. Synchronized methods can only be run by one thread at a time. Synchronized can also be used on scopes. Another approach is to use a mutex. One can think of a mutex like a single key which you must acquire to reach a critical section but once used, no one else can use it until the current key user has returned it after leaving the critical section. In Java, mutexes are instances of the class \texttt{Semaphore}, a more general case of a mutex for arbitrary number of keys (even a negative amount!). Using a Semaphore initialized with a key count of 1, the following mutex will fix our race condition even though, locking the entire part of a thread does not make good use of them.
 \begin{lstlisting}[style=A_Java]
 threads[i] = new Thread(() -> {
   try {
@@ -101,10 +94,8 @@ threads[i] = new Thread(() -> {
   }
 });
 \end{lstlisting}
-
-Using such locks brings about another problem. What if Thread $i$ is waiting on thread $j$ and thread $j$ is waiting on thread $i$? That will go on forever and is called a deadlock. Taking a look at listing \ref{listing:dlock}, suppose that the thread \texttt{t1} start and acquires \texttt{mutex1} but as soon as he has, a context switch occurs and the thread \texttt{t2} starts to run and acquires \texttt{mutex2}. Now it does not matter which thread is running, both mutexes are locked and both threads are unable to acquire the 'key'.
-
-\begin{lstlisting}[style=A_Java, caption={\href{https://github.com/JonSteinn/AndroidDevelopment/blob/master/examples/lab2/javathreads/5/Main.java}{Deadlock}}, label={listing:dlock}]
+Using such locks brings about another problem. What if Thread $i$ is waiting on thread $j$ and thread $j$ is waiting on thread $i$? The waiting will go on forever and is called a deadlock. In the following code, suppose that the thread \texttt{t1} start and acquires \texttt{mutex1} but as soon as he has, a context switch occurs and the thread \texttt{t2} starts to run and acquires \texttt{mutex2}. Now it does not matter which thread is running, both mutexes are locked and both threads are unable to acquire the 'key'.
+\begin{lstlisting}[style=A_Java]
 public class Main {
     public static void main(String[] args) {
         Semaphore mutex1 = new Semaphore(1);
@@ -112,6 +103,7 @@ public class Main {
         Thread t1 = new Thread(() -> {
             try {
                 mutex1.acquire();
+                // Thread 1 stuck here
                 mutex2.acquire();
                 mutex1.release();
                 mutex2.release();
@@ -122,6 +114,7 @@ public class Main {
         Thread t2 = new Thread(() -> {
             try {
                 mutex2.acquire();
+                // Thread 2 stuck here
                 mutex1.acquire();
                 mutex2.release();
                 mutex1.release();
@@ -134,10 +127,8 @@ public class Main {
     }
 }
 \end{lstlisting}
-
-Thread pools are used to gain more control over threads in Java. We can control the upper bound of how many threads are active at any given time from a pool. This is done with \texttt{Executor} and \texttt{ExecutorService}. In listing \ref{listing:thpool} we have a thread pool with a thread limit of five but 15 threads to start. As soon as 5 threads are already active, no more are added until at least one of them finishes.
-
-\begin{lstlisting}[style=A_Java, caption={\href{https://github.com/JonSteinn/AndroidDevelopment/blob/master/examples/lab2/javathreads/6/Main.java}{Thread pool}}, label={listing:thpool}]
+Thread pools are used to gain more control over threads in Java. We can control the upper bound of how many threads are active at any given time from a pool. This is done with \texttt{Executor} and \texttt{ExecutorService}. Here we have a thread pool with a thread limit of five but 15 threads to start. As soon as 5 threads are already active, no more are added until at least one of them finishes.
+\begin{lstlisting}[style=A_Java]
 public static void main(String[] args) {
     ExecutorService executor = Executors.newFixedThreadPool(5);
     for (int i = 0; i < 15; i++) {
@@ -154,7 +145,6 @@ public static void main(String[] args) {
     executor.shutdown();
 }
 \end{lstlisting}
-
 
 
 \section{The Android UI thread}
