@@ -8,7 +8,7 @@ def hello_world(number)
     dictionary = {}
     if number.isdigit()
         dictionary['status'] = 'success'
-        dictionary['number_squared'] = int(number)2
+        dictionary['number_squared'] = int(number)**2
     else
         dictionary['status'] = 'error'
         dictionary['number_squared'] = -1
