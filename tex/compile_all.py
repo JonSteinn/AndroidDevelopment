@@ -7,6 +7,13 @@ s = "\\input{{settings.tex}}\n\\begin{{document}}\n\input{{lab0{0}/lab0{0}.tex}}
 labs_count = 7
 
 
+def clean_old(lab):
+    try:
+        os.remove("../pdf/lab0{0}.pdf".format(lab))
+    except FileNotFoundError:
+        pass
+
+
 def create_main(lab):
     fd = open("main.tex", "w")
     fd.write(s.format(lab))
@@ -27,6 +34,7 @@ def move_pdf(lab):
 
 
 for i in range(labs_count):
+    clean_old(i)
     create_main(i)
     run_py_script()
     move_pdf(i)
