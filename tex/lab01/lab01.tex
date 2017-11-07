@@ -224,15 +224,10 @@ Radio buttons have to be grouped in a container called \texttt{RadioGroup}. If n
 Spinners are Android's drop down lists. They work similarly to list views and can be populated with string array resources in XML. They can also be populated in Java with \texttt{ArrayAdapter} but use a different layout id than list views. The \texttt{onItemSelectedListener} is triggered as soon as an element is selected in the spinner. For spinners with a possible empty choice, the method \texttt{onNothingSelected} is invoked. An example can be found \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab1/spinner}{here} (source code) or \href{TODO}{here} (video).
 
 \section{Assignment - Simple calculator}
-\begin{minipage}{0.45\textwidth}
+In this assignment you should design a very simple calculator with two input fields and something to display the result (or error message). It should support addition, subtraction, multiplication and division. 
 \begin{figure}[H]
 \centering
 \includegraphics[scale=1]{simple_calculator.png}
 \caption{Simple calculator}
 \label{fig:simcal}
 \end{figure}
-\end{minipage}
-\hfill
-\begin{minipage}{0.475\textwidth}
-In this assignment you should design a very simple calculator with two input fields and a result display. It should support addition, subtraction, multiplication and division. The bulk of the Java code is given but you must create the XML layout from scratch. The Java code assumes that an error message is stored in a resource string \texttt{err\_msg}. You must implement the \texttt{onCreate} method in Java as well as the calculations and the resulting display. A template is available \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/templates/lab1}{here}.
-\end{minipage}
