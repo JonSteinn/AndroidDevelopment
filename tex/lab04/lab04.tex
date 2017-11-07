@@ -119,8 +119,14 @@ There are various options available such as setting headers, body (for post requ
 \section{Creating a simple Web API (Optional)}
 One approach to writing apps is to keep the logic stored on a webserver making Android do little more than update UI on events and serve as a client to the webserver. This way it is easy to extend your app to another platform. Now we will look at creating a very simple webserver with Flask. Feel free to adopt this to any other framework if you have prior knowledge of webservers or if you have some other preferences over using python. Note that the localhost of the emulator, your phone and your computer are not the same so having a webserver running on your localhost on your computer can not be accessed that way from the emulator or the phone. The emulator can us IP address \texttt{10.0.2.2} while you would probably have to deploy the server to use for your actual phone. In the provided example we create a very webserver that returns the square of a number. Note that you need \href{https://www.python.org/downloads/}{Python} and \href{http://flask.pocoo.org}{Flask} to run the server. The source code can be found \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab4/squarenumber}{here}, the programming session \href{TODO}{here} and a guide how one can deploy the webserver \href{TODO}{here}.
 
-\section{Assignment}
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.6]{web_api.png}
+\caption{Shared logic for multiple platforms}
+\label{fig:logshare}
+\end{figure}
 
+\section{Assignment}
 
 \subsection{Option A}
 Use the \href{https://developer.oxforddictionaries.com}{Oxford dictionaries API} to create an app where you can enter an english word and get its definition displayed. In order to do that you must get a key (there is a free one available) which you should add as header fields when making a request.
