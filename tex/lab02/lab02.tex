@@ -148,17 +148,17 @@ public static void main(String[] args) {
 
 
 \section{The Android UI thread}
-Upon starting an Android app, thread is created to which will run our launcher activity and from there on, any component (which we will look at later) started. It also handles all events and interaction concerning the UI. No other threads should interact directly with the UI. This thread is called the main thread or the UI thread.\\
+Upon starting an Android app, a thread is created which will run our launcher activity and from there on, any component (which we will look at later). It also handles all events and interaction concerning the UI. No other threads should interact directly with the UI. This thread is called the main thread or the UI thread.\\
 
-Suppose our app needs to run a long and expansive task, taking 10 seconds to execute. If we were to run that on the main thread, then it would become not be able to listen for any events and the UI would essentially be locked and eventually the operating system would warn the user that the app is not responding. To avoid this, all expansive tasks should be performed by new threads in the background of the main one. Tasks like calling a web server, downloading and many more.\\
+Suppose our app needs to run a long and expensive task, taking 10 seconds to execute. If we were to run that on the main thread, then it would not be able to listen for any events during the task and the UI would essentially be locked and eventually the operating system would warn the user that the app is not responding. To avoid this, all expensive tasks should be performed by new threads in the background of the main one. Tasks like calling a web server, downloading and many more.\\
 
-Just as the UI thread shouldn't run long tasks, the vice versa holds, that long task running threads should never update the UI. The two rules of thumb are
+Just as the UI thread should not run long tasks, the vice versa holds, that long task running threads should never update the UI. The two rules of thumb are
 \begin{itemize}
 \item \textbf{Never run a long task on the UI thread}
 \item \textbf{Never update your UI from any thread other than the UI thread}
 \end{itemize}
 
-There are multiple Android specific ways to create and managing threads but we will only look at few here. Background tasks in Android bring about some memory issues which we will address later, when dealing with multiple components.
+There are multiple Android specific ways to create and managing threads but we will only look at few here. Background tasks in Android can bring about some memory issues which we will address when looking at activities.
 
 \section{Asynchronous tasks}
 The abstract class \texttt{AsyncTask} provides an easy way to perform a background task which can talk to the UI thread. Asynchronous tasks are used for a short task required to run in a background thread, preferably not running longer than a few seconds. They are however bound to the lifetime of their activity.\\
@@ -176,139 +176,11 @@ All of these can be of the type \texttt{Void} which will omit that type from the
 \item \texttt{onProgressUpdate}. Runs on the UI thread where receives progress updates from the background task.
 \item \texttt{onPostExecute}. Runs on the UI thread where it processes the result of the background task once done.
 \end{itemize}
-Additionally \texttt{onCancel} is called if the tasked is canceled instead of \texttt{onPostExecute}. The cancellation should be done by the UI thread but once canceled, the \texttt{doInBackground} method will not stop unless it regularly checks if the task has been canceled.\\
+Additionally \texttt{onCancel} is called if the tasked is cancelled instead of \texttt{onPostExecute}. The cancellation should be done by the UI thread but once cancelled, the \texttt{doInBackground} method will not stop unless it regularly checks if the task has been canceled.\\
 
 Asynchronous task should always be created and started by the UI thread. To start a asynchronous task, we can call \texttt{execute} or \texttt{executeOnExecutor}, the latter when using a Thread pool. To communicate with the UI thread we must either declare our task class (that inhertis from \texttt{AsyncTask}) as a subclass of our activity or use a callback interface.\\
 
-Listings \ref{listing:asynlay} and \ref{listing:asyncprog} shows a program that upon a button click creates a fake background job and updates a progress bar while working in the background. The job can be cancelled with another button and its status is displayed on the screen. The source code can be found \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab2/asynctask}{here}.
-
-\begin{lstlisting}[style=A_XML, caption={Layout for AsyncTask program}, label={listing:asynlay}]
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    tools:context="com.ru.droid.lab.MainActivity">
-    <Button
-        android:id="@+id/btn_start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Start thread"/> <!-- Move to res/strings -->
-    <Button
-        android:id="@+id/btn_cancel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Cancel thread"/> <!-- Move to res/strings -->
-    <TextView
-        android:id="@+id/msg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Idle"/> <!-- Move to res/strings -->
-    <ProgressBar
-        android:id="@+id/prog"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        android:visibility="invisible"
-        android:max="1000"/>
-</LinearLayout>
-\end{lstlisting}
-
-\begin{lstlisting}[style=A_Java, caption={Background task done with asynchronous task}, label={listing:asyncprog}]
-public class MainActivity extends AppCompatActivity {
-
-    private ProgressBar progressBar;
-    private TextView message;
-    private MyTask task;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        progressBar = (ProgressBar)findViewById(R.id.prog);
-        message = (TextView)findViewById(R.id.msg);
-
-        findViewById(R.id.btn_start).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (task == null || task.getStatus() != AsyncTask.Status.RUNNING) {
-                    task = new MyTask();
-                    task.execute(5);
-                }
-            }
-        });
-
-        findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (task != null && task.getStatus() == AsyncTask.Status.RUNNING) {
-                    task.cancel(true);
-                }
-            }
-        });
-    }
-
-    public class MyTask extends AsyncTask<Integer /* Params */, 
-            Integer /* Progress */, Void /* Result */> {
-            
-        @Override
-        protected void onPreExecute() {
-            progressBar.setVisibility(View.VISIBLE);
-            progressBar.setProgress(0);
-            message.setText("Running"); // should be a resource string!
-        }
-        
-        @Override
-        protected Void doInBackground(Integer... params) {
-            long startTime = System.currentTimeMillis();
-            long endTime = params[0] * 1000 + startTime;
-            long timeInterval = endTime - startTime;
-            long timeNow;
-            int last = 0;
-            // Run for params[0] seconds given that the task has not been canceled.
-            while (!this.isCancelled() && 
-                    (timeNow = System.currentTimeMillis()) < endTime) {
-                // Calculate ratio
-                int progress = (int)(1000 * (timeNow - startTime) 
-                        / (double)timeInterval);
-                // Send progress update if it has changed
-                if (progress != last) {
-                    last = progress;
-                    publishProgress(progress);
-                }
-            }
-            return null; // return null with Void result
-        }
-
-        @Override
-        protected void onPostExecute(Void results) {
-            message.setText("Complete"); // should be a resource string!
-            taskCleanUp();
-        }
-
-        @Override
-        protected void onCancelled() {
-            message.setText("Cancelled"); // should be a resource string!
-            taskCleanUp();
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            progressBar.setProgress(values[0]);
-        }
-    }
-
-    private void taskCleanUp() {
-        task = null;
-        progressBar.setVisibility(View.INVISIBLE);
-    }
-}
-\end{lstlisting}
-
+In our provided example, we have a program that upon a button click creates a fake background job and updates a progress bar while working in the background. The job can be cancelled with another button and its status is displayed on the screen. The source code can be found \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab2/asynctask}{here} and the programming session \href{TODO}{here}.
 
 \section{Loopers and Handlers}
 A looper provides a thread with a message queue (message being some data or job to process) and keeps checking if any data to process. Each thread can only have one looper but does not need to have one. The UI thread uses this mechanic to process events. Messages are handled by handlers. Each thread can have many handlers. Handlers are bound to a single thread that must have a Looper (and therefore, a message queue) and can post data to a Looper's message queue or process it. Handlers can add a message to the message queue in a thread from another thread that will be processed eventually. A handler can therefore easily communicate with the UI thread from another thread.

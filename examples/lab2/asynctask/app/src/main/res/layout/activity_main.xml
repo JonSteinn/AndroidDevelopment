@@ -6,6 +6,7 @@
     android:orientation="vertical"
     android:gravity="center"
     tools:context="com.ru.droid.lab.MainActivity">
+
     <Button
         android:id="@+id/btn_start"
         android:layout_width="wrap_content"

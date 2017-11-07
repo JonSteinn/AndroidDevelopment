@@ -11,15 +11,15 @@ public class MainActivity extends AppCompatActivity {
 
     private ProgressBar progressBar;
     private TextView message;
-    private MyTask task;
+    private BackgroundJob task;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        progressBar = (ProgressBar)findViewById(R.id.progress);
-        message = (TextView)findViewById(R.id.msg);
+        progressBar = findViewById(R.id.progress);
+        message = findViewById(R.id.msg);
 
         setEventListeners();
     }
@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // If task does not exists or is not running
                 if (task == null || task.getStatus() != AsyncTask.Status.RUNNING) {
-                    task = new MyTask();
+                    task = createBackgroundJob();
                     task.execute(5);
                 }
             }
@@ -47,56 +47,36 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // Params and Progress are Integer while Result are Void.
-    public class MyTask extends AsyncTask<Integer, Integer, Void> {
-
-        @Override
-        protected void onPreExecute() {
-            progressBar.setVisibility(View.VISIBLE);
-            progressBar.setProgress(0);
-            message.setText(R.string.running);
-        }
-
-        @Override
-        protected Void doInBackground(Integer... params) {
-            long startTime = System.currentTimeMillis();
-            long endTime = params[0] * 1000 + startTime;
-            long timeInterval = endTime - startTime;
-            long timeNow;
-            int last = 0;
-            // Run for params[0] seconds given that the task has not been canceled.
-            while (!this.isCancelled() && (timeNow = System.currentTimeMillis()) < endTime) {
-                // Calculate ratio
-                int progress = (int)(1000 * (timeNow - startTime) / (double)timeInterval);
-                // Send progress update if it has changed (no need otherwise)
-                if (progress != last) {
-                    last = progress;
-                    publishProgress(progress);
-                }
-            }
-            return null; // return null with Void result
-        }
-
-        @Override
-        protected void onPostExecute(Void results) {
-            message.setText(R.string.complete);
-            taskCleanUp();
-        }
-
-        @Override
-        protected void onCancelled() {
-            message.setText(R.string.cancelled);
-            taskCleanUp();
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            progressBar.setProgress(values[0]);
-        }
-    }
-
     private void taskCleanUp() {
         task = null;
         progressBar.setVisibility(View.INVISIBLE);
+    }
+
+    private BackgroundJob createBackgroundJob() {
+        return new BackgroundJob(new UiCallback<Integer, Void>() {
+            @Override
+            public void onPreExecute() {
+                progressBar.setVisibility(View.VISIBLE);
+                progressBar.setProgress(0);
+                message.setText(R.string.running);
+            }
+
+            @Override
+            public void onProgressUpdate(Integer... values) {
+                progressBar.setProgress(values[0]);
+            }
+
+            @Override
+            public void onPostExecute(Void results) {
+                message.setText(R.string.complete);
+                taskCleanUp();
+            }
+
+            @Override
+            public void onCancelled() {
+                message.setText(R.string.cancelled);
+                taskCleanUp();
+            }
+        });
     }
 }
