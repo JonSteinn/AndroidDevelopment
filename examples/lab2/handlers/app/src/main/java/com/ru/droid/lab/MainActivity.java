@@ -19,45 +19,35 @@ public class MainActivity extends AppCompatActivity {
         // Handler attached to out UI thread's looper
         final Handler handler = new Handler(Looper.getMainLooper());
 
-        final ProgressBar progressBar = (ProgressBar)findViewById(R.id.progress);
-        final Switch aSwitch = (Switch)findViewById(R.id.thread_switch);
+        final ProgressBar progressBar = findViewById(R.id.progress);
+        final Switch aSwitch = findViewById(R.id.thread_switch);
 
         // On switch listener
-        aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                // Note that this is a callback so this is true if we went from unchecked to checked
-                if (isChecked) {
-                    // Create a new thread to run our long tas
-                    Thread backgroundThread = new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            // Let handler post new runnable to UI thread from background thread
-                            handler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    aSwitch.setClickable(false);
-                                    progressBar.setVisibility(View.VISIBLE);
-                                }
-                            });
-                            // Wait 5000 ms on backgroundThread (Fake long task)
-                            SystemClock.sleep(5000);
-                            // Let handler post new runnable to UI thread from background thread
-                            handler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    progressBar.setVisibility(View.INVISIBLE);
-                                    aSwitch.setClickable(true);
-                                    aSwitch.setChecked(false);
-                                }
-                            });
-                        }
-                    });
-
-                    // start our new thread to perform long task
-                    backgroundThread.start();
-                }
+        aSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            // Note that this is a callback so this is true if we went from unchecked to checked
+            if (isChecked) {
+                // start our new thread to perform long task
+                newThread(handler, aSwitch, progressBar).start();
             }
+        });
+    }
+
+    // Create a new thread to run our long task
+    private static Thread newThread(final Handler h, final Switch s, final ProgressBar pb) {
+        return new Thread(() -> {
+            // Let handler post new runnable to UI thread from background thread
+            h.post(() -> {
+                s.setClickable(false);
+                pb.setVisibility(View.VISIBLE);
+            });
+            // Wait 5000 ms on backgroundThread (Fake long task)
+            SystemClock.sleep(5000);
+            // Let handler post new runnable to UI thread from background thread
+            h.post(() -> {
+                pb.setVisibility(View.INVISIBLE);
+                s.setClickable(true);
+                s.setChecked(false);
+            });
         });
     }
 }
