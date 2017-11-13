@@ -224,9 +224,9 @@ public class GraphicView extends View {
     @Override
     public void onDraw(Canvas canvas) {
         canvas.drawCircle(
-                Circle.getCircle().getX(), 
-                Circle.getCircle().getY(),
-                Circle.getCircle().getRadius(), 
+                Circle.getInstance().getX(), 
+                Circle.getInstance().getY(),
+                Circle.getInstance().getRadius(), 
                 paint
         );
     }
@@ -237,16 +237,16 @@ public class GraphicView extends View {
 \end{lstlisting}
 You are free to add what you need to the \texttt{Circle} class. It must however support accessing these 3 geometrical variables in the way that is provided.
 \begin{lstlisting}[style=A_Java]
-public class Circle {
+public final class Circle {
     // Geometrical variables
     private float x;
     private float y;
     public final float radius;
 
     // Singleton pattern
-    private static Circle circle;
-    public static Circle getCircle() {
-        return circle == null ? (circle = new Circle()) : circle;
+    private static final Circle INSTANCE = new Circle();
+    public static Circle getInstance() {
+        return INSTANCE;
     }
 
     // A private constructor to guarantee a single instance
