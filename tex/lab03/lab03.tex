@@ -95,7 +95,73 @@ We might also want to get data to other way around, from a lunched activity to t
 The provided example shows an app where the main activity contains just a single button which upon clicking starts the second activity for result. In the second activity there is an input field and a button for sending back the result (the text in the input field) and then destroying itself. The main activity then uses a callback to set the text of its button with the value passed by the second activity, given that the id and code match. The source code can be found \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab3/activityforresult}{here} and a programming session \href{TODO}{here}.
 
 \subsection{Thread and activity memory issues}
-TODO
+With regards to activity lifecycle, we have to be careful when using threads. As we have seen, an activity can be destroyed and can then be started again, creating a new instance of the activity. This even happens when the we switch from portrait to landscape mode or vice versa. Suppose we have the following activity.
+\begin{lstlisting}[style=A_Java]
+public class MainActivity extends AppCompatActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) SystemClock.sleep(100);
+            }
+        }).start();
+        // The lambda edition of the same is
+        /*
+        new Thread(() -> {
+            while (true) SystemClock.sleep(100);
+        }).start();
+        */
+    }
+}
+\end{lstlisting}
+As with every non-static nested anonymous class, it holds a reference to its parent class (\texttt{MainActivity} in this case). When the activity is destroyed, it should be ready to be garbage collected but the thread is still running and since it holds a reference to the class it won't be\footnote{The Java garbage collector can free memory when there is no reference to it}. A quick way to fix the problem would be to make the inner thread static, then it doesn't hold a reference to the \texttt{MainActivity} instance.
+\begin{lstlisting}[style=A_Java]
+public class MainActivity extends AppCompatActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        getInfiniteBackgroundJob().start();
+    }
+    public static Thread getInfiniteBackgroundJob() {
+        return new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) SystemClock.sleep(100);
+            }
+        });
+    }
+}
+\end{lstlisting}
+Now we are however leaking the thread. When the Activity is destroyed, there is no reference to it but the thread keeps living and is collected by the Java virtual machine. In the following code, we interupt the thread when the activity is destroyed.
+\begin{lstlisting}[style=A_Java]
+public class MainActivity extends AppCompatActivity {
+    private Thread backgroundJob;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        backgroundJob = new InfiniteBackgroundJob();
+        backgroundJob.start();
+    }
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        backgroundJob.interrupt();
+    }
+
+    private static class InfiniteBackgroundJob extends Thread {
+        @Override
+        public void run() {
+            while(true) SystemClock.sleep(100);
+        }
+    }
+}
+\end{lstlisting}
+In the provided example we use weak references to deal with memory leak in \texttt{AsyncTask}. The task itself does nothing other that wait some time. The sourcecode can be found \href{...}{here} and a programming session \href{TODO}{here}.
 
 \section{Layout inflater}
 Before we look into fragments, we will take a look at another way of re-using code with layout inflaters. Suppose we want multiple repetition of the same partial layout on our screen like can be seen in figure \ref{fig:infldem}, it would be very tedious to write seperate views and code for all of them, especially if they become complicated.
