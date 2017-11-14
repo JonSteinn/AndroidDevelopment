@@ -135,5 +135,11 @@ Lets start by creating a new resource file. Select layout as type, add orientati
 In the provided example we create a simple app using fragments to support landscape and portrait mode. You can click on the box cover of a few video games and when you do you get a screenshot of the game in a new activity. If you however go to landscape mode and click a box cover, you get the screenshot on the same activity, to the other fragment's right. The sourcecode can be found \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab3/fragments}{here} and the programming session \href{TODO}{here}.
 
 \section{Assignment}
-TODO: make template and better description:
-%Task: Phonebook with add_new and view_details. Add_new can be a seperate activity in both landscape_and_portrait and shared between them. List of people and view must be in fragments and with similar UI as the example above. People are free to write static containers to store what they need.
+Your task is to implement a phonebook. It should be able to show a list of all persons, add a new person and view details on any specific person. You can use a hashmap as a fake database. The UI should be different for landscape and portrait mode. In landscape mode the menu should always be on the left side of the screen while in portrait you should swap between screens whenever you navigate. Figure \ref{fig:scetch} shows a prototype for the program you are expected to turn in. You are not required to use fragments.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=.2]{ui_scetch_for_assig.png}
+\caption{A prototype of the assignment}
+\label{fig:scetch}
+\end{figure}
