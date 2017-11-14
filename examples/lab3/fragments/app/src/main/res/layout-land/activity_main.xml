@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/c_frag_land"
-        android:name="com.ru.droid.lab.fragments.ChooseFragment"
+        android:name="com.ru.droid.lab.ChooseFragment"
         tools:layout="@layout/fragment_choose"
         android:layout_weight="0.5"
         android:layout_width="0dp"
@@ -17,7 +17,7 @@
 
     <fragment
         android:id="@+id/ss_frag_land"
-        android:name="com.ru.droid.lab.fragments.ScreenshotFragment"
+        android:name="com.ru.droid.lab.ScreenshotFragment"
         tools:layout="@layout/fragment_screenshot"
         android:layout_weight="0.5"
         android:layout_width="0dp"

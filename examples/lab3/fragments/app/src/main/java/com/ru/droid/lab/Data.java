@@ -1,4 +1,4 @@
-package com.ru.droid.lab.db;
+package com.ru.droid.lab;
 
 public class Data {
     private int screenShotId;

@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    tools:context="com.ru.droid.lab.fragments.ChooseFragment">
+    tools:context="com.ru.droid.lab.ChooseFragment">
+
     <TextView
         android:layout_weight="0.1"
         android:layout_width="match_parent"
@@ -26,14 +27,16 @@
             android:layout_height="wrap_content"
             android:layout_width="175dp"
             android:adjustViewBounds="true"
-            android:scaleType="fitCenter"/>
+            android:scaleType="fitCenter"
+            android:contentDescription="@string/mdk" />
         <ImageButton
             android:id="@+id/btn_carma"
             android:src="@drawable/carmageddon"
             android:layout_height="wrap_content"
             android:layout_width="175dp"
             android:adjustViewBounds="true"
-            android:scaleType="fitCenter"/>
+            android:scaleType="fitCenter"
+            android:contentDescription="@string/carmagedddon" />
     </LinearLayout>
 
     <LinearLayout
@@ -48,13 +51,16 @@
             android:layout_height="wrap_content"
             android:layout_width="175dp"
             android:adjustViewBounds="true"
-            android:scaleType="fitCenter"/>
+            android:scaleType="fitCenter"
+            android:contentDescription="@string/jazz_jackrabbit_2" />
         <ImageButton
             android:id="@+id/btn_dung"
             android:src="@drawable/dungeon_keeper"
             android:layout_height="wrap_content"
             android:layout_width="175dp"
             android:adjustViewBounds="true"
-            android:scaleType="fitCenter"/>
+            android:scaleType="fitCenter"
+            android:contentDescription="@string/dungeon_keeper" />
     </LinearLayout>
+
 </LinearLayout>

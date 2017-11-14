@@ -3,12 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.ru.droid.lab.activities.ScreenshotActivity">
+    tools:context="com.ru.droid.lab.ScreenshotActivity">
+
     <fragment
         android:id="@+id/ss_frag"
-        android:name="com.ru.droid.lab.fragments.ScreenshotFragment"
+        android:name="com.ru.droid.lab.ScreenshotFragment"
         tools:layout="@layout/fragment_screenshot"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </fragment>
+
 </FrameLayout>

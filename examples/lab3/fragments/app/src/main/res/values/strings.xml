@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">Lab</string>
     <string name="vid90">90s Video Game Screenshots</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="jazz_jackrabbit_2">Jazz Jackrabbit 2</string>
+    <string name="dungeon_keeper">dungeon keeper</string>
+    <string name="mdk">mdk</string>
+    <string name="carmagedddon">carmagedddon</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.ru.droid.lab.fragments;
+package com.ru.droid.lab;
 
 
 import android.app.Activity;
@@ -11,14 +11,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ru.droid.lab.R;
-
 public class ScreenshotFragment extends Fragment {
     public ScreenshotFragment() {}
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_screenshot, container, false);
     }
 

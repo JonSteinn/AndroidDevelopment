@@ -1,5 +1,4 @@
-package com.ru.droid.lab.fragments;
-
+package com.ru.droid.lab;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -10,17 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.ru.droid.lab.R;
-import com.ru.droid.lab.activities.ScreenshotActivity;
-import com.ru.droid.lab.db.Data;
-import com.ru.droid.lab.db.FakeDB;
-
 public class ChooseFragment extends Fragment {
     public ChooseFragment() {}
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_choose, container, false);
     }
 
@@ -44,14 +37,12 @@ public class ChooseFragment extends Fragment {
             intent.putExtra("SCREENSHOT_TITLE", d.getScreenShotTitle());
             a.startActivity(intent);
         } else {
-            ScreenshotFragment ssf = (ScreenshotFragment)getFragmentManager()
-                    .findFragmentById(R.id.ss_frag_land);
+            ScreenshotFragment ssf = (ScreenshotFragment)getFragmentManager().findFragmentById(R.id.ss_frag_land);
             ssf.setScreenShot(a, d.getScreenShotId(), d.getScreenShotTitle());
         }
     }
 
     private boolean portraitMode(Activity a) {
-        return a.getResources().getConfiguration().orientation
-                == Configuration.ORIENTATION_PORTRAIT;
+        return a.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
     }
 }
