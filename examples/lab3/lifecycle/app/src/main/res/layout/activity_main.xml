@@ -5,19 +5,19 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    tools:context="com.ru.droid.lab.MainActivity">
+    tools:context="com.ru.droid.lab.SecondActivity">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Activity 1"/> <!-- move to res -->
+        android:text="@string/activity_1"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="gotoWithoutFinish"
-        android:text="goto 2"/> <!-- move to res -->
+        android:text="@string/goto_2"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="gotoAndFinish"
-        android:text="goto 2 and finish"/> <!-- move to res -->
+        android:text="@string/goto_2_and_finish"/>
 </LinearLayout>

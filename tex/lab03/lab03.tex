@@ -6,14 +6,14 @@
 
 
 \section{Activities}
-We have already used an activity without going into too much detail what it is. An activity is a single screen unit (usually full screen) with an user interface. So far we have only worked with a single activity but an Android app can have multiple activities. It breaks the app up into section with different purpose and UI. For example, a menu in an email app could be an activity while composing an email might be another, opened from the menu.\\
+We have already used an activity without going into too much detail what it is. An activity is a single screen unit (usually full screen) with an user interface. So far we have only worked with a single activity but an Android app can have multiple activities. It breaks the app up into section with different purpose and UI. For example, a menu in an email app could be an activity while composing an email might be another, started from the menu activity.\\
 
-One activity serves as a luncher activity. It is our starting point when running the app (opposed to a C\texttt{++} main function) and from there on we can start navigating to other activities if any. Every app must have a luncher activity. All activities must be declared in our app's manifest\footnote{Android Studio does this automatically when an activity is created} and the luncher activity is also determined there.\\
+One activity serves as a luncher activity. It is our starting point when running the app (opposed to a C main function) and from there on we can start navigating to other activities if any. Every app must have a luncher activity. All activities must be declared in our app's manifest\footnote{Android Studio does this automatically when an activity is created} and the luncher activity is also determined there.\\
 
-Each activity uses a layout file that defines their UI at leat partially (some of it may be done dynamically in Java). In the \texttt{onCreate} function we have been setting the activity's layout with the \texttt{setContentView} method. Activities can share layouts although it serves a limited purpose unless most of the UI is dynamic. We will look at better ways to share UI in Fragments.\\
+Each activity uses a layout file that defines their UI at least partially (some of it may be done dynamically in Java). In the \texttt{onCreate} method we have been setting the activity's layout with the \texttt{setContentView} method. Activities can share layouts although it serves a limited purpose unless most of the UI is dynamic. We will look at better ways to share UI when we look at layout inflating and fragments.\\
 
 \subsection{Starting a new Activity}
-Lets start by creating a new activity with \menu{File > New > Activity > Empty Activity} and name it \texttt{SecondActivity} and leave the other options as they are. Before proceeding you should inspect your manifest. Add a button to the luncher activity which calls the method \texttt{clicked()} upon being clicked and add some text to the second activity so it differentiates from the other one. Finally add the following method to the luncher activity and run the progam.
+Lets start by creating a new activity with \menu{File > New > Activity > Empty Activity} and name it \texttt{SecondActivity} and leave the other options as they are. Before proceeding you should inspect your manifest. Add a button to the luncher activity which calls the method \texttt{clicked} upon being clicked and add some text to the second activity so it differentiates from the other one. Finally add the following method to the luncher activity and run the progam.
 
 \begin{lstlisting}[style=A_Java]
 public void clicked(View view) {
@@ -24,7 +24,7 @@ public void clicked(View view) {
 The \texttt{startActivity} method takes \texttt{Intent} as a paramter. We will look at that class, its parameters and methods in more detail later but for now, you can think of it as a bridge between two activities. 
 
 \subsection{Lifecycle}
-Activities are managed by a stack called the activity stack (or the back stack) and whatever activity is in our foreground is at the top of our stack. During the lifecycle of an activity, it can have various states and the event that brings us to set states have their own callback methods. This lifecycle can be seen in figure \ref{fig:actlife}.
+Activities are managed by a stack called the activity stack and whatever activity is in our foreground is at the top of our stack. During the lifecycle of an activity, it can have various states and the event that brings us to set states have their own callback methods. This lifecycle can be seen in figure \ref{fig:actlife}.
 
 \begin{figure}[H]
 \centering
@@ -37,16 +37,16 @@ The states are
 \begin{itemize}
 	\item \textbf{Starting}. In the process of setting up.
 	\item \textbf{Running}. In foreground.
-	\item \textbf{Paused}. Not in foreground.
+	\item \textbf{Paused}. Not in foreground but active.
 	\item \textbf{Stopped}. Inactive but remains in memory.
-	\item \textbf{Destroyed}. Shut down and removed from memory.
+	\item \textbf{Destroyed}. Shut down and ready to be removed from memory.
 \end{itemize}
 
 There are multiple callback methods called when moving between states. We have already seen \texttt{onCreate} which is the only one that activities are required to override but there are several others.
 
 \begin{itemize}
 	\item \textbf{\texttt{onCreate()}}.\\
-    \noindent This callback method is for the event of creating an activity and is called before the activity starts for the first time. It is typically used for initialization as we have been using it already.
+    \noindent This callback method is for the event of creating an activity and is called before the activity starts. It is typically used for initialization as we have been using it already.
 	\item \textbf{\texttt{onStart()}}.\\
     \noindent Is called every time the activity starts, after entering the starting state. Here the activity becomes visible and prepares for entering the foreground and becoming interactive. This is where the app initializes the code that maintains the UI of the activity.
 	\item \textbf{\texttt{onResume()}}.\\
@@ -61,152 +61,16 @@ There are multiple callback methods called when moving between states. We have a
     \noindent When you are removing your activity from memory this method is invoked but at what time exactly is unpredictable. To destroy our current activity we can call the \texttt{finish} method.
 \end{itemize}
 
-Using \texttt{Log.d} we can use printf debugging with certain tags and filter them with the Android monitor as shown in figure \ref{fig:logfilt}. 
+Using \texttt{Log.d} we can use printf debugging with certain tags and filter them with the Android Logcat as shown in figure \ref{fig:logfilt}. 
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=.7]{log.png}
+\includegraphics[scale=.6]{log.png}
 \caption{Filter logs}
 \label{fig:logfilt}
 \end{figure}
 
-Using \texttt{Log.d} we can monitor the lifecycle of the two activities found in listings \ref{listing:twoactxml} and \ref{listing:twoactjava} (the source code can be found \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab3/lifecycle}{here}). You should try various scenarios of navigating between the apps as well as rotating the screen and using the Android back button.
-
-\begin{lstlisting}[style=A_XML,caption={Two layouts for two activities},label={listing:twoactxml}]
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    tools:context="com.ru.droid.lab.MainActivity">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Activity 1"/> <!-- move to res -->
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="gotoWithoutFinish"
-        android:text="goto 2"/> <!-- move to res -->
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="gotoAndFinish"
-        android:text="goto 2 and finish"/> <!-- move to res -->
-</LinearLayout>
-
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    tools:context="com.ru.droid.lab.SecondActivity">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Activity 2"/> <!-- move to res -->
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="gotoWithoutFinish"
-        android:text="goto 1"/> <!-- move to res -->
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="gotoAndFinish"
-        android:text="goto 1 and finish"/> <!-- move to res -->
-</LinearLayout>
-
-\end{lstlisting}
-
-\begin{lstlisting}[style=A_Java,caption={Overriding on activity lifecycle callbacks for two activities},label={listing:twoactjava}]
-public class MainActivity extends AppCompatActivity {
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Log.d("LifeCycle", "Activity 1: onCreate");
-    }
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d("LifeCycle", "Activity 1: onStart");
-    }
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d("LifeCycle", "Activity 1: onResume");
-    }
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.d("LifeCycle", "Activity 1: onPause");
-    }
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d("LifeCycle", "Activity 1: onStop");
-    }
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d("LifeCycle", "Activity 1: onDestroy");
-    }
-    public void gotoWithoutFinish(View view) {
-        startActivity(new Intent(MainActivity.this, SecondActivity.class));
-    }
-    public void gotoAndFinish(View view) {
-        startActivity(new Intent(MainActivity.this, SecondActivity.class));
-        finish();
-    }
-}
-
-public class SecondActivity extends AppCompatActivity {
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_second);
-        Log.d("LifeCycle", "Activity 2: onCreate");
-    }
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d("LifeCycle", "Activity 2: onStart");
-    }
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d("LifeCycle", "Activity 2: onResume");
-    }
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.d("LifeCycle", "Activity 2: onPause");
-    }
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d("LifeCycle", "Activity 2: onStop");
-    }
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d("LifeCycle", "Activity 2: onDestroy");
-    }
-    public void gotoWithoutFinish(View view) {
-        startActivity(new Intent(SecondActivity.this, MainActivity.class));
-    }
-    public void gotoAndFinish(View view) {
-        startActivity(new Intent(SecondActivity.this, MainActivity.class));
-        finish();
-    }
-}
-\end{lstlisting}
-
+Using \texttt{Log.d} we can monitor the lifecycle of the two activities found \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab3/lifecycle}{here}. You should try various scenarios of navigating between the apps as well as rotating the screen and using the Android back button.
 
 \subsection{Passing data between activities}
 As we have already discussed, Intents are something of a bridge between activities. We used it to start a new activity but it can also be used to pass data between activities.
@@ -457,6 +321,8 @@ public class SecondActivity extends AppCompatActivity {
     }
 }
 \end{lstlisting}
+
+\subsection{Thread and activity memory issues}
 
 \section{Layout inflater}
 Before we look into fragments, we will take a look at another way of re-using code using layout inflaters. Suppose we want to multiple instances of the same partial layout on our screen like can be seen in figure \ref{fig:infldem}, it would be very tedious to write seperate views and code for all of them, especially if they become complicated. 
