@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
     }
 }
 \end{lstlisting}
-In the provided example we use weak references to deal with memory leak in \texttt{AsyncTask}. The task itself does nothing other that wait some time. The sourcecode can be found \href{...}{here} and a programming session \href{TODO}{here}.
+The main issue we have here is our lack of communication with the UI thread. In the provided example we use weak references to deal with memory leak in \texttt{AsyncTask}. The task itself does nothing other that wait some time. The sourcecode can be found \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab3/weakreference}{here} and a programming session \href{TODO}{here}.
 
 \section{Layout inflater}
 Before we look into fragments, we will take a look at another way of re-using code with layout inflaters. Suppose we want multiple repetition of the same partial layout on our screen like can be seen in figure \ref{fig:infldem}, it would be very tedious to write seperate views and code for all of them, especially if they become complicated.
