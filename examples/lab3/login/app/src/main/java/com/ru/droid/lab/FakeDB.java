@@ -6,17 +6,15 @@ import java.util.Map;
 public final class FakeDB {
     private static Map<String, String> usersAndPasswords = new HashMap<>();
     static {
-        usersAndPasswords.put("Max", "abcd");
-        usersAndPasswords.put("Mona", "1234");
-        usersAndPasswords.put("Vladimir", "Vodka");
-        usersAndPasswords.put("Nicole", "PV");
-        usersAndPasswords.put("Alfred", "IC");
+        usersAndPasswords.put("Max", "Payne");
+        usersAndPasswords.put("Mona", "Sax");
+        usersAndPasswords.put("Vladimir", "Lem");
+        usersAndPasswords.put("Nicole", "Horne");
+        usersAndPasswords.put("Alfred", "Woden");
+        usersAndPasswords.put("Jack", "Lupino");
     }
-    public static boolean doesExist(String un) {
-        return usersAndPasswords.containsKey(un);
-    }
-    public static boolean correctPassword(String un, String pw) {
-        return usersAndPasswords.containsKey(un) && usersAndPasswords.get(un).equals(pw);
+    public static boolean validate(String un, String pw) {
+        return pw != null && pw.equals(usersAndPasswords.get(un));
     }
     private FakeDB() {}
 }

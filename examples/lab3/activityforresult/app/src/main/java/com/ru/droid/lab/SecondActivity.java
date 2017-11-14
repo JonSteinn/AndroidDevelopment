@@ -16,9 +16,9 @@ public class SecondActivity extends AppCompatActivity {
 
     public void sendBackResults(View view) {
         Intent intent = new Intent();
-        EditText msg = (EditText)findViewById(R.id.msg_id);
+        EditText msg = findViewById(R.id.msg_id);
         intent.putExtra("MSG", msg.getText().toString());
-        setResult(RESULT_OK, intent);
+        setResult(RESULT_OK, intent); // Using built in RESULT_OK but custom codes can be made
         finish();
     }
 }

@@ -26,11 +26,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQ_ID) {
             if (resultCode == RESULT_OK) {
-                String val = data.getStringExtra("MSG");
-                ((Button) findViewById(R.id.btn)).setText(val);
+                String val = data.getStringExtra( "MSG");
+                ((Button) findViewById(R.id.btn)).setText(val == null ? "" : val);
             } else {
-                Toast.makeText(this, "ERROR", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.err1, Toast.LENGTH_SHORT).show();
             }
+        } else {
+            Toast.makeText(this, R.string.err2, Toast.LENGTH_SHORT).show();
         }
     }
 }
