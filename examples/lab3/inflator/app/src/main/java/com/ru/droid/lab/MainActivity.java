@@ -9,7 +9,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
@@ -22,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void populateLayout() {
-        LinearLayout root = (LinearLayout)findViewById(R.id.root_view);
+        LinearLayout root = findViewById(R.id.root_view);
         for (Map.Entry<Integer, TeamInfo> info : FakeDB.getAllImages()) {
             addNewTeam(root, info.getKey(), info.getValue());
         }
@@ -34,27 +33,22 @@ public class MainActivity extends AppCompatActivity {
         View team = View.inflate(this, R.layout.team, null);
 
         // Set button image source and on click listener
-        ImageButton btn = (ImageButton)team.findViewById(R.id.team_img);
+        ImageButton btn = team.findViewById(R.id.team_img);
         btn.setImageResource(img);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(MainActivity.this, info.getName(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        btn.setOnClickListener(v -> Toast.makeText(MainActivity.this, info.getName(), Toast.LENGTH_SHORT).show());
 
         Resources res = getResources();
 
         // Set club's name using resource string format
-        TextView name = (TextView)team.findViewById(R.id.team_title);
+        TextView name = team.findViewById(R.id.team_title);
         name.setText(res.getString(R.string.team_name, info.getName()));
 
         // Set club's epl title count using resource string format
-        TextView epl = (TextView)team.findViewById(R.id.team_epl);
+        TextView epl = team.findViewById(R.id.team_epl);
         epl.setText(res.getString(R.string.team_epl, info.getEplTitles()));
 
         // Set club's cl title count using resource string format
-        TextView cl = (TextView)team.findViewById(R.id.team_cl);
+        TextView cl = team.findViewById(R.id.team_cl);
         cl.setText(res.getString(R.string.team_cl, info.getClTitles()));
 
         // Add the view to our root view group

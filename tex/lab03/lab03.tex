@@ -98,7 +98,7 @@ The provided example shows an app where the main activity contains just a single
 TODO
 
 \section{Layout inflater}
-Before we look into fragments, we will take a look at another way of re-using code using layout inflaters. Suppose we want to multiple instances of the same partial layout on our screen like can be seen in figure \ref{fig:infldem}, it would be very tedious to write seperate views and code for all of them, especially if they become complicated. 
+Before we look into fragments, we will take a look at another way of re-using code with layout inflaters. Suppose we want multiple repetition of the same partial layout on our screen like can be seen in figure \ref{fig:infldem}, it would be very tedious to write seperate views and code for all of them, especially if they become complicated.
 
 \begin{figure}[H]
 \centering
@@ -107,167 +107,10 @@ Before we look into fragments, we will take a look at another way of re-using co
 \label{fig:infldem}
 \end{figure}
 
-To re-use a layout, we can use what is called a layout inflater. Start by creating a new layout resource file by right clicking on your layout folder and selecting \menu{New > New > Android resource file} and name it \texttt{team.xml}. In it we will create a layout for a single team as seen in figure \ref{fig:infldem}. The XML can be seen in listing \ref{listing:xmlinfldem}. Note that the main layout has an id but and some attributes set but has no children so nothing would be visible here unless we make it so in Java.
-
-\begin{lstlisting}[style=A_XML, caption={XML for inflater demo}, label={listing:xmlinfldem}]
-<!-- Activity's layout -->
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/root_view"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    tools:context="com.ru.droid.lab.MainActivity">
-</LinearLayout>
-
-<!-- team.xml -->
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/team_outer_layout"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:gravity="center_vertical">
-    <ImageButton
-        android:id="@+id/team_img"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:scaleType="fitXY"/>
-    <LinearLayout
-        android:id="@+id/team_inner_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <TextView
-            android:id="@+id/team_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:id="@+id/team_epl"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:id="@+id/team_cl"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
-</LinearLayout>
-
-<!-- String with formats! -->
-<resources>
-    <string name="app_name">Lab</string>
-    <string name="team_name">Club: %s</string>
-    <string name="team_epl">EPL titles: %s</string>
-    <string name="team_cl">CL titles: %s</string>
-</resources>
-\end{lstlisting}
-
-In this example we have 3 figures in the drawable folder called \texttt{afc.jpg}, \texttt{lfc.jpg} and \texttt{mufc.jpg}. We also provide a fake database that gives us the option of iterating over all images.
-
-\begin{lstlisting}[style=A_Java]
-public final class FakeDB {
-    private static Map<Integer, TeamInfo> imageDetail;
-    private static void init() {
-        if (imageDetail == null) {
-            imageDetail = new HashMap<>();
-            imageDetail.put(R.drawable.afc,
-                    new TeamInfo("Arsenal FC", 13, 0));
-            imageDetail.put(R.drawable.lfc,
-                    new TeamInfo("Liverpool FC", 18, 5));
-            imageDetail.put(R.drawable.mufc,
-                    new TeamInfo("Manchester United", 20, 3));
-        }
-    }
-    public static Iterable<Map.Entry<Integer, TeamInfo>> getAllImages() {
-        init();
-        return imageDetail.entrySet();
-    }
-}
-
-public final class TeamInfo {
-    private String name;
-    private String eplTitles;
-    private String clTitles;
-    public TeamInfo(String name, int epl, int cl) {
-        this.name = name;
-        this.eplTitles = Integer.toString(epl);
-        this.clTitles = Integer.toString(cl);
-    }
-    public String getName() {
-        return this.name;
-    }
-    public String getEplTitles() {
-        return this.eplTitles;
-    }
-    public String getClTitles() {
-        return this.clTitles;
-    }
-}
-\end{lstlisting}
-
-Now we can implement our activity to populate its layout with inflated views created from our layout resource.
-
-\begin{lstlisting}[style=A_Java, caption={Layout inflation in Java}, label={listing:javainfl}]]
-public class MainActivity extends AppCompatActivity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        populateLayout();
-    }
-
-    private void populateLayout() {
-        LinearLayout root = (LinearLayout)findViewById(R.id.root_view);
-        for (Map.Entry<Integer, TeamInfo> info : FakeDB.getAllImages()) {
-            addNewTeam(root, info.getKey(), info.getValue());
-        }
-    }
-
-    private void addNewTeam(LinearLayout parent,
-                            final int img, final TeamInfo info) {
-
-        // Create new view with inflate
-        View team = View.inflate(this, R.layout.team, null);
-
-        // Set button image source and on click listener
-        ImageButton btn = (ImageButton)team.findViewById(R.id.team_img);
-        btn.setImageResource(img);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(MainActivity.this, info.getName(),
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        Resources res = getResources();
-
-        // Set club's name using resource string format
-        TextView name = (TextView)team.findViewById(R.id.team_title);
-        name.setText(res.getString(R.string.team_name, info.getName()));
-
-        // Set club's epl title count using resource string format
-        TextView epl = (TextView)team.findViewById(R.id.team_epl);
-        epl.setText(res.getString(R.string.team_epl, info.getEplTitles()));
-
-        // Set club's cl title count using resource string format
-        TextView cl = (TextView)team.findViewById(R.id.team_cl);
-        cl.setText(res.getString(R.string.team_cl, info.getClTitles()));
-
-        // Add the view to our root view group
-        parent.addView(team);
-
-    }
-}
-\end{lstlisting}
-
-Note that we are not using \texttt{findViewById} from our current instance but rather using the template view and searching for them within it. The source code for this example is available \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab3/inflator}{here}.
+To re-use a layout, we can use what is called a layout inflater. To do that we must create a new layout resource file with \menu{File > New > Android resource file} which can serve as a re-usable template. The provided example is the single team layout in figure \ref{fig:infldem}, used for each team. Note that all visible components of the UI are set in Java so without doing so, nothing would be visible. The figures are placec in the drawable resource folder and can be accessed directly in Java. Also note that we are not using \texttt{findViewById} from our instance (activity) but rather using the template view and searching for them within it. The source code for this example is available \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab3/inflator}{here} and a programming session \href{TODO}{here}.
 
 \section{Fragments}
-Fragments are a re-usable UI component that can be added to an activity. They are similar to activities in many ways, something like a smaller version of activities. They have their own layout and lifecycle although they do live and depend on activities, that is their state depends on the state of their activity. The lifecycle of a fragment can be seen in figure \ref{fig:flife}.
+Fragments are a re-usable UI component that can be added to an activity. They are similar to activities in many ways, something like a smaller version of activities. They have their own layout and lifecycle although their live depends on activities, that is their state depends on the state of their activity. The lifecycle of a fragment can be seen in figure \ref{fig:flife}.
 
 \begin{figure}[H]
 \centering
@@ -278,7 +121,7 @@ Fragments are a re-usable UI component that can be added to an activity. They ar
 
 We will not go into much detail about the state or callbacks of a fragment. The \texttt{onCreateView} method must always be overwritten and it creates and returns the view hierarchy associated with the fragment. Another callback that we will have to use is \texttt{onActivityCreated} which is called when the parent activity has finished its own \texttt{onCreate} method.\\
 
-Suppose we want to create a UI that is both suited for tablets or phones, or for both portrait and landscape mode on our phone. We could use a layout inflater or we could just remake the entire UI for both of them. We can also use fragments to create re-usable components that has all the logic and rendering for whatever we want to do, while the activity only looks at how to render the fragments. An example of such a scenario can be seen in figure \ref{fig:freuse} where we have a list of something and upon clicking, it shows us more details on what was selected. Here we could have one activity that has two different layouts depending on the mode, one displaying one fragment while the other displays two fragments.
+Suppose we want to create a UI that is both suited for tablets or phones, or for both portrait and landscape mode on our phone. We could use a layout inflater or we could just remake the entire UI for both of them. We can also use fragments to create re-usable components that has all the logic and rendering for whatever we want to do, while the activity serves mostly as a container. An example of such a scenario can be seen in figure \ref{fig:freuse} where we have a list of something and upon clicking, it shows us more details on what was selected. Here we could have one activity that has two different layouts depending on the mode, one with two activities, each with its fragment and a navigation between the two while the other displays two fragments on the same activity and updates one from an event from the other.
 
 \begin{figure}[H]
 \centering
