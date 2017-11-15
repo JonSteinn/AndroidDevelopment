@@ -127,8 +127,6 @@ One approach to writing apps is to keep the logic stored on a webserver making A
 \end{figure}
 
 \section{Assignment}
-
-\subsection{Option A}
 Use the \href{https://developer.oxforddictionaries.com}{Oxford dictionaries API} to create an app where you can enter an english word and get its definition displayed. In order to do that you must get a key (there is a free one available) which you should add as header fields when making a request.
 
 \begin{lstlisting}[style=A_Java]
@@ -139,7 +137,3 @@ Ion.with(this)
         .addHeader("app_key", "123123afsdf123123af123123a")
         // and so on
 \end{lstlisting}
-
-\subsection{Option B}
-Edit the square number API (or make one from scratch in another framework) so it accepts a post request with a JSON object with the number as data. You must also update the Android app to send a post request instead of a get request. It should then respond with another JSON object with the number squared.
-
