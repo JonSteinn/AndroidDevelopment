@@ -33,6 +33,9 @@ def move_pdf(lab):
         os.remove("main.pdf")
 
 
+directory = os.path.dirname('../pdf/')
+if not os.path.exists(directory):
+    os.makedirs(directory)
 for i in range(labs_count):
     clean_old(i)
     create_main(i)
