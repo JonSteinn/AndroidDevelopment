@@ -5,6 +5,40 @@
 \maketocpage
 
 \section{Shared preferences}
+If the data we need to store is small and fits into key-value pairs then \texttt{SharedPreferences} is ideal. It is a very simple way to read and write data. A \texttt{SharedPreference} instance references a file on the phone which includes key-value pairs. These preferences can be bound to a single app or shared between many. From an activity, we can access preferences in the following way.
+\begin{lstlisting}[style=A_Java]
+// Shared preferences
+SharedPreferences pref1 = getSharedPreferences("MY_PREF", MODE_PRIVATE);
+// Preferences
+SharedPreferences pref2 = getPreferences(MODE_PRIVATE);
+\end{lstlisting}
+The first can be shared between multiple activities and has its own identifier while the latter is an activity's default preference. The \texttt{MODE\_PRIVATE} flag determines the accessibility to the preference, which in this case is only the current app. Others include \texttt{MODE\_WORLD\_READABLE} and \texttt{MODE\_WORLD\_WRITEABLE} which allow other apps to read and write to the preference respectively. To access the data in a preference, we can use various methods depending on the value type.
+\begin{lstlisting}[style=A_Java]
+SharedPreferences pref = getSharedPreferences("MY_PREF", MODE_PRIVATE);
+int val1 = pref.getInt("some_key_1", -1); // -1 is the default value if key is not found
+boolean val2 = pref.getBoolean("some_key_2", false);
+Map<String, ?> allPairs = pref.getAll();
+\end{lstlisting}
+To write to a preference we must use a preference editor.
+\begin{lstlisting}[style=A_Java]
+SharedPreferences pref = getSharedPreferences("MY_PREF", MODE_PRIVATE);
+SharedPreferences.Editor editor = pref.edit();
+editor.putString("MY_KEY", "MY_VALUE");
+editor.apply(); // happens in background, use .commit() to force write here
+\end{lstlisting}
+In the provided example we use \texttt{SharedReferences} to store background color settings so when the app is started again the color is set to whatever it was the last time the app was used. The sourcecode is available \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab5/colorpref}{here} and a programming session \href{TODO}{here}.
+
 \section{Local SQlite database}
+
+\begin{comment}
+- db.beginTransaction() db.endTransaction() -> group of commands
+- db.execSQL(<query>) -> run query that dont return anything like INSERT or DELETE
+- db.rawQuery(<query>, <args>) -> run a query that returns somehing like SELECT .. returns a Cursor object
+\end{comment}
+
+
 \section{Remote Firebase databse}
+\subsection{Setup}
+\subsection{...}
+
 \section{Assignment}
