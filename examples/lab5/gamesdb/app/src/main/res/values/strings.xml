@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Lab</string>
+    <string name="name">Name</string>
+    <string name="developer">Developer</string>
+    <string name="release_year">Release year</string>
+    <string name="add">Add</string>
+    <string name="invalid">INVALID!</string>
+    <string name="edit">Edit</string>
+    <string name="remove">REMOVE</string>
+</resources>
