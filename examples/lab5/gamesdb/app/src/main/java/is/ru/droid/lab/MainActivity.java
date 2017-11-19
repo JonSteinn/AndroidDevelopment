@@ -1,16 +1,10 @@
 package is.ru.droid.lab;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -21,7 +15,7 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
-    private DbHelper db;
+    private DataAccess data;
     private EditText name, dev, year;
     private TableLayout table;
 
@@ -33,19 +27,23 @@ public class MainActivity extends AppCompatActivity {
         name = findViewById(R.id.name);
         dev = findViewById(R.id.developer);
         year = findViewById(R.id.release);
-
         table = findViewById(R.id.table);
-
-        db = new DbHelper(this);
+        data = new DataAccess(this);
 
         populateTable();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        data.close();
     }
 
     public void add(View view) {
         if (!isValid()) {
             return;
         }
-        db.addGame(new Game(
+        data.addGame(new Game(
                 name.getText().toString(),
                 dev.getText().toString(),
                 year.getText().toString()
@@ -55,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void populateTable() {
         table.removeAllViews();
-        List<Game> games = db.getAllGames();
+        List<Game> games = data.getAllGames();
         for (Game g : games) {
             TableRow[] tableRows = getRows(g);
             table.addView(tableRows[0]);
@@ -94,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
                         dev.getText().toString(),
                         year.getText().toString()
                 );
-                db.updateGame(updated);
+                data.updateGame(updated);
                 populateTable();
             }
         });
@@ -103,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
         Button btn2 = new Button(this);
         btn2.setText(R.string.remove);
         btn2.setOnClickListener((view) -> {
-            db.deleteGameByID(String.format(Locale.US, "%d", g.getId()));
+            data.deleteGameByID(String.format(Locale.US, "%d", g.getId()));
             populateTable();
         });
         lower.addView(btn2);
