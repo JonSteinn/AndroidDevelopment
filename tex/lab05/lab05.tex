@@ -15,7 +15,8 @@ SharedPreferences pref2 = getPreferences(MODE_PRIVATE);
 The first can be shared between multiple activities and has its own identifier while the latter is an activity's default preference. The \texttt{MODE\_PRIVATE} flag determines the accessibility to the preference, which in this case is only the current app. Others include \texttt{MODE\_WORLD\_READABLE} and \texttt{MODE\_WORLD\_WRITEABLE} which allow other apps to read and write to the preference respectively. To access the data in a preference, we can use various methods depending on the value type.
 \begin{lstlisting}[style=A_Java]
 SharedPreferences pref = getSharedPreferences("MY_PREF", MODE_PRIVATE);
-int val1 = pref.getInt("some_key_1", -1); // -1 is the default value if key is not found
+// -1 is the default value if key is not found
+int val1 = pref.getInt("some_key_1", -1);
 boolean val2 = pref.getBoolean("some_key_2", false);
 Map<String, ?> allPairs = pref.getAll();
 \end{lstlisting}
@@ -28,14 +29,113 @@ editor.apply(); // happens in background, use .commit() to force write here
 \end{lstlisting}
 In the provided example we use \texttt{SharedReferences} to store background color settings so when the app is started again the color is set to whatever it was the last time the app was used. The sourcecode is available \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab5/colorpref}{here} and a programming session \href{TODO}{here}.
 
-\section{Local SQlite database}
+\section{Local SQLite database}
+Android has a built in local SQLite database. SQLite is an very small and lightweight ACID-compliant open source relational database system written in C. This course assumes prior knowledge of databases and SQL. The main objective here is to use them in Android so most table schemas are kept trivial.\\
 
-%\begin{comment}
-%- db.beginTransaction() db.endTransaction() -> group of commands
-%- db.execSQL(<query>) -> run query that dont return anything like INSERT or DELETE
-%- db.rawQuery(<query>, <args>) -> run a query that returns somehing like SELECT .. returns a Cursor object
-%\end{comment}
+Since the database is local, it can not be used to share resources between various users of an app. It can still be useful to store data locally and an offline app would be a prime example. It is faster than a remote database but should still be performed asynchronously. We will look at two approaches to using the local database. 
 
+\subsection{SQLite APIs}
+The SQLite APIs are somewhat low level and often use raw SQL queries. We will use SQLiteOpenHelper, which require an App Context, to create a database and its tables and add to it some access methods.
+
+\begin{lstlisting}[style=A_Java]
+public class DbHelper extends SQLiteOpenHelper {
+    public DbHelper(Context context) {
+        super(context, "MY_DATABASE.db", null, 1);
+    }
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL("CREATE TABLE PERSONS (ID INTEGER " +
+                "PRIMARY KEY AUTOINCREMENT, NAME TEXT)");
+    }
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldV, int newV) {
+        db.execSQL("DROP TABLE IF EXISTS PERSONS");
+        onCreate(db);
+    }
+    public void deletePersonById(String id) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete("MY_DATABASE.db", "ID = ?", new String[]{id});
+        db.close();
+    }
+    public List<String> getAllUsers() {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT NAME FROM PERSONS", null);
+        List<String> lis = new ArrayList<>(c.getCount());
+        while (c.moveToNext()) lis.add(c.getString(1)); // 0 = ID, 1 = NAME
+        c.close();
+        db.close();
+        return lis;
+    }
+}
+\end{lstlisting}
+Note that getting a new \texttt{SQLiteDatabase} instance in each access method is expansive so you might want to use a single instance and close it when done. In the provided example we create a single table database holding game info which you can add to, edit and remove. The source code is available \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab5/gamesdb}{here} and a programming session \href{TODO}{here}.
+
+\subsection{Room Persistence Library}
+The Room persistence library provides an abstraction layer over SQLite. It was introduced by Google in 2017\footnote{There could be some Java +1.8 compatability issues depending on when you are reading this}. It uses annotation and consists of the three following components.
+
+\begin{itemize}
+\item \textbf{Database}. Contains the database holder and serves as the main access point for the underlying connection to your app's data.
+\item \textbf{Entity}. Represents a table within the database.
+\item \textbf{DAO}. Contains the methods used for accessing the database.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.4]{room_architecture.png}
+\caption{Room's architecture}
+\label{fig:roomarch}
+\end{figure}
+
+Add the following dependencies to your \texttt{build.gradle} but make sure to use the latest versions.
+\begin{lstlisting}[style=A_txt]
+compile 'android.arch.lifecycle:extensions:1.0.0'
+compile 'android.arch.persistence.room:runtime:1.0.0'
+annotationProcessor 'android.arch.lifecycle:compiler:1.0.0'
+annotationProcessor 'android.arch.persistence.room:compiler:1.0.0'
+\end{lstlisting}
+The following shows a very simple \texttt{Entity} where the table has only two columns, an auto generated id and a name.
+\begin{lstlisting}[style=A_Java]
+@Entity(tableName = "PERSONS")
+public class Person {
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+
+    private String name;
+
+    // + getters&setters and possibly a constructor
+}
+\end{lstlisting}
+The access object contains various methods to access our data. In the following example we have a way to get all, get a specific person, delete one and add one.
+\begin{lstlisting}[style=A_Java]
+@Dao
+public interface PersonDAO {
+    @Query("SELECT * FROM PERSONS")
+    List<Person> getAll();
+
+    @Query("SELECT * FROM PERSONS WHERE name = :name")
+    List<Person> getPersonsByName(String name);
+
+    @Delete
+    void delete(Person person);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void addUser(User user);
+}
+\end{lstlisting}
+Finally we have the database object. Note that in this case we allow queries on the main thread just for testing the database but this should never be allowed in general.
+\begin{lstlisting}[style=A_Java]
+@Database(entities = {Person.class}, version = 1)
+public abstract class MyDatabase extends RoomDatabase {
+    public abstract PersonDAO personDao();
+
+    public static MyDatabase getInstance(Context context) {
+        return Room.databaseBuilder(context, MyDatabase.class, "MY_ROOM_DB")
+                .allowMainThreadQueries() // DON'T ALLOW THIS!
+                .build();
+    }
+}
+\end{lstlisting}
+In the provided example we create a trivial authentication system (passwords stored as plain text) with Room. We will also allow main thread queries for simplification. The source code is available \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab5/roomdb}{here} and a programming session \href{TODO}{here}.
 
 \section{Remote Firebase databse}
 
