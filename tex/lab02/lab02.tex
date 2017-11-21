@@ -5,7 +5,7 @@
 \maketocpage
 
 \section{Java Threads}
-This section offers a brief introduction to threading in Java but anyone with prior knowledge is free to skip to the next section. The source code for all code examples is available \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab2/javathreads}{here} and a programming session \href{TODO}{here}.
+This section offers a brief introduction to threading in Java but anyone with prior knowledge is free to skip to the next section. The source code for all code examples is available \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab2/javathreads}{here} and a programming session \href{https://www.youtube.com/watch?v=JqSdEsKneJc}{here}. The programming session is done in IntelliJ and there is a video of it being setup \href{https://youtu.be/JpKJMFytYTE}{here}
 
 \begin{table}[H]
 \center
@@ -179,7 +179,7 @@ Additionally \texttt{onCancel} is called if the tasked is cancelled instead of \
 
 Asynchronous task should always be created and started by the UI thread. To start a asynchronous task, we can call \texttt{execute} or \texttt{executeOnExecutor}, the latter when using a Thread pool. To communicate with the UI thread we must either declare our task class (that inhertis from \texttt{AsyncTask}) as a subclass of our activity or use a callback interface.\\
 
-In our provided example, we have a program that upon a button click creates a fake background job and updates a progress bar while working in the background. The job can be cancelled with another button and its status is displayed on the screen. The source code can be found \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab2/asynctask}{here} and the programming session \href{TODO}{here}.
+In our provided example, we have a program that upon a button click creates a fake background job and updates a progress bar while working in the background. The job can be cancelled with another button and its status is displayed on the screen. The source code can be found \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab2/asynctask}{here} and the programming session \href{https://youtu.be/hNRu4tYNg10}{here}.
 
 \section{Loopers and Handlers}
 A looper provides a thread with a message queue (message being some data or job to process) and keeps checking if there is any data to process. Each thread can only have one looper but does not need to have one\footnote{A thread with a looper is called a looper thread}. The UI thread uses this mechanic to process events. Messages are handled by handlers. Each thread can have many handlers. Handlers are bound to a single thread that must have a Looper (and therefore, a message queue) and can post data to a Looper's message queue or process it. Handlers can add a message to the message queue in a thread from another thread that will be processed eventually. A handler can therefore easily supoort communication from some thread to the UI thread.
@@ -191,7 +191,7 @@ A looper provides a thread with a message queue (message being some data or job 
 \label{fig:simcal}
 \end{figure}
 
-A typical scenario would have a handler bound to the UI thread's Looper, being accessed from a second thread asking him to post a task to perform on the UI thread. This task would typically envolve UI updates from the second thread. This can be seen in the provided example, where upon clicking a switch we create a new thread which posts the task to disable the switch and start showing the progress bar to the UI thread. After that the new thread just waits for 5 seconds which can resemble any task taking some time and once he has finished he posts another task to the UI thread's message queue to update the UI once again. The source code can be found \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab2/handlers}{here} and a programming session \href{TODO}{here}.
+A typical scenario would have a handler bound to the UI thread's Looper, being accessed from a second thread asking him to post a task to perform on the UI thread. This task would typically envolve UI updates from the second thread. This can be seen in the provided example, where upon clicking a switch we create a new thread which posts the task to disable the switch and start showing the progress bar to the UI thread. After that the new thread just waits for 5 seconds which can resemble any task taking some time and once he has finished he posts another task to the UI thread's message queue to update the UI once again. The source code can be found \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab2/handlers}{here} and a programming session \href{https://youtu.be/__e-C97P6Eo}{here}.
 
 \section{RxAndroid}
 An Android specific binding for the RxJava library is a very powerful 3rd party option to handle background tasks. Its main components are schedulers, observers and observables. An observable can perform a background task while notifying an observer on a specified scheduler. Before we can use \href{https://github.com/ReactiveX/RxAndroid}{RxAndroid} we must add the following dependencies in our \texttt{build.gradle}.
@@ -199,7 +199,7 @@ An Android specific binding for the RxJava library is a very powerful 3rd party 
 compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
 compile 'io.reactivex.rxjava2:rxjava:2.1.3'
 \end{lstlisting}
-In the provided example, we use schedulers, ovservers and observables to perform a fake time consuming task while keeping the UI thread from locking. The source code can be found \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab2/rxandroid}{here} and a programming session \href{TODO}{here}.
+In the provided example, we use schedulers, ovservers and observables to perform a fake time consuming task while keeping the UI thread from locking. The source code can be found \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab2/rxandroid}{here} and a programming session \href{https://youtu.be/aSyy4MGnmQ4}{here}.
 
 \section{Assignment - Bouncing ball}
 Given a template for a view that draws graphics and a mathematical circle, your task is to make the circle move indefinitely in a diagonal direction but never leaving the screen (bouncing when colliding with its edges). You are free to use whatever threading technique you want to solve this task.
