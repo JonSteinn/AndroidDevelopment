@@ -6,6 +6,25 @@
 
 \section{Unit Testing}
 \section{Instrumented tests}
-\section{Mocking Web servers}
-\section{Mocking databases}
+\section{Mocking}
 \section{Assignment}
+
+
+
+- This course assumes experience with JUnit
+- Tests in Android can be divided into 
+	* those that run on a JVM an can be run from the developing machine and
+	* those that require Android APIs (and therefore an emulator or a phone) to run
+- Local tests are must faster so the general rule is to only use the Android tests if you have to
+- Its not a bad id to test your app of multiple devices
+	* on a device with the lowest supported android version,
+	* on a device with the highest available android version,
+	* on a device with low resolution
+	* on a device with high resolution
+- The instrumentation API allow your tests to control the life cycle and user interaction events.
+- Under normal circumstances your application cannot control the life cycle events and the user drives the application. For example, if Android creates your activity the onCreate() method is called. Via instrumentation you can control these events via your test code. For example, your instrumentation test can start the activity. Afterwards, it can call the finish() and restart the activity to test if the instance state of the activity is correctly restored.
+- ActivityRule in AndroidTests
+	To test an activity, you use the ActivityTestRule class provided by the Android Testing Support Library. This rule provides functional testing of a single activity. The activity under test will be launched before each test annotated with @Test and before any method annotated with @Before. It will be terminated after the test is completed and all methods annotated with @After are finished. The Activity under Test can be accessed during your test by calling ActivityTestRule#getActivity().
+- Mockito:
+	- When(<method with specific parameter) -> thenReturn(<return value>)
+	- cannot mock static or private methods or final
