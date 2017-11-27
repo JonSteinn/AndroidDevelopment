@@ -39,6 +39,9 @@ Lab | Content | PDF
 * [Google Map with Marker](https://developers.google.com/maps/documentation/android-api/map-with-marker)
 * [Bluetooth](https://developer.android.com/guide/topics/connectivity/bluetooth.html)
 * [Camera](https://developer.android.com/guide/topics/media/camera.html)
+* [Speech to Text](https://www.androidtutorialpoint.com/material-design/android-speech-text-tutorial/)
+* [Text to Speech](https://www.androidtutorialpoint.com/basics/android-text-speech-converter-code-android-studio/)
+* 
 ### List of libraries
 * [Android Open Source Projects](https://github.com/Trinea/android-open-project/tree/master/English%20Version)
 * [List of Android UI/UX Libraries](https://github.com/wasabeef/awesome-android-ui)
@@ -55,11 +58,13 @@ Lab | Content | PDF
 * [Derek Banas](https://www.youtube.com/playlist?list=PLGLfVvz_LVvSPjWpLPFEfOCbezi6vATIh)
 * [Stanford](https://web.stanford.edu/class/cs193a/videos.shtml)
 * [Codepath](https://guides.codepath.com/android)
-* [Tutorials point](https://www.tutorialspoint.com/android/index.htm)
+* [Tutorials Point](https://www.tutorialspoint.com/android/index.htm)
 * [Vogella (Android)](http://www.vogella.com/tutorials/android.html)
 * [Vogella (Java)](http://www.vogella.com/tutorials/java.html)
 * [Future studio](https://futurestud.io/tutorials/tag/android)
+* [Android Tutorial Point](https://www.androidtutorialpoint.com)
 ### Google
+* [Testing examples](https://github.com/googlesamples/android-testing)
 * [Glossary](https://developers.google.com/android/for-all/vocab-words/)
 * [Design](https://developer.android.com/design/index.html)
 * [Tutorials](https://developer.android.com/training/index.html)
