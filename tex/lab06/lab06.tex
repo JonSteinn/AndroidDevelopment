@@ -107,14 +107,45 @@ public class MockDemo {
     }
 }
 \end{lstlisting}
-In the provided example we have two classes. One class has a method that takes long to execute and the other class keeps and instance of first one and uses its method in a method. We use Mockito to mock the expensive method when testing the other one. The source code can be found \href{TODO}{here} and a programming session \href{TODO}{here}.
+In the provided example we have two classes. One class has a method that takes long to execute and the other class keeps and instance of first one and uses its method in a method. We use Mockito to mock the expensive method when testing the other one. The source code can be found \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab6/mocktest}{here} and a programming session \href{TODO}{here}.
 
 \section{Room database testing}
+Suppose we have a database called \texttt{MyDatabase}, then we can create an in memory database for testing our dao queries. The database query tests belong to the tests performed on Android.
+\begin{lstlisting}[style=A_Java]
+@RunWith(AndroidJUnit4.class)
+public class DaoTest {
+    @Rule
+    public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
 
+    private MyDatabase mDatabase;
+
+    @Before
+    public void initDb() throws Exception {
+        mDatabase = Room.inMemoryDatabaseBuilder(
+                InstrumentationRegistry.getContext(),
+                MyDatabase.class)
+                .allowMainThreadQueries()
+                .build();
+        // TODO: Add fake data
+    }
+
+    @After
+    public void closeDb() throws Exception {
+        mDatabase.close();
+    }
+
+    // TODO: add tests
+}
+\end{lstlisting}
+In the provided example we have a very simple database of users with nothing but an id and name and some possibles queries that we test. The
+source code is available \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab6/roomtest}{here} and a programming session \href{TODO}{here}.
 
 \section{Espresso}
 
 % dealing with web server
-% dealing with database
 % dealing with shared pref
+% dealing with database
+
+
+
 % dealing with firebase

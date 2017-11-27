@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Lab</string>
+    <string name="get_data_from_api">Get data from API</string>
+    <string name="go_to_next_activity">Go To Next Activity</string>
+    <string name="add_value_if_does_not_exist">add value if does not exist</string>
+    <string name="post">post</string>
+</resources>
