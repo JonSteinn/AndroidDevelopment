@@ -4,24 +4,117 @@
 \maketitlepage{App Development}{in Android Studio}{Lab 6: Testing}
 \maketocpage
 
-\section{...}
-- This course assumes experience with JUnit
-- Tests in Android can be divided into 
-	* those that run on a JVM an can be run from the developing machine and
-	* those that require Android APIs (and therefore an emulator or a phone) to run
-- Local tests are must faster so the general rule is to only use the Android tests if you have to
-- Its not a bad id to test your app of multiple devices
-	* on a device with the lowest supported android version,
-	* on a device with the highest available android version,
-	* on a device with low resolution
-	* on a device with high resolution
-- The instrumentation API allow your tests to control the life cycle and user interaction events.
-- Under normal circumstances your application cannot control the life cycle events and the user drives the application. For example, if Android creates your activity the onCreate() method is called. Via instrumentation you can control these events via your test code. For example, your instrumentation test can start the activity. Afterwards, it can call the finish() and restart the activity to test if the instance state of the activity is correctly restored.
-- ActivityRule in AndroidTests
-	To test an activity, you use the ActivityTestRule class provided by the Android Testing Support Library. This rule provides functional testing of a single activity. The activity under test will be launched before each test annotated with @Test and before any method annotated with @Before. It will be terminated after the test is completed and all methods annotated with @After are finished. The Activity under Test can be accessed during your test by calling ActivityTestRule#getActivity().
-- Mockito:
-	- When(<method with specific parameter) -> thenReturn(<return value>)
-	- cannot mock static or private methods or final
+\section{Android testing}
+This course assumes knowledge of unit testing with JUnit so we will not go over that in much detail. In Android there are two main categories of tests. Those that can run on a JVM (and thus, from our developing machine) and those that require Android to run. Local tests are much faster so the general rule is to only use the Android tests if we have to. You should also see how the app displays on various devices. It is good to deploy the app on a device with the lowest and highest supported Android versions and on devices with low and high resolutions.\\
+
+\noindent The following folder structure for tests is used in Android Studio.
+\begin{itemize}
+\item \texttt{app/src/main/java} - The source code of our app.
+\item \texttt{app/src/test/java} - The source code of our tests that run on a JVM.
+\item \texttt{app/src/androidTest/java} - The source code of our tests that run on Android.
+\end{itemize}
+There are specific dependencies for both types of tests in our \texttt{build.gradle}.
+\begin{lstlisting}[style=A_txt]
+testCompile '...'
+androidTestCompile '...'
+\end{lstlisting}
+The following shows a non instantiable class with a single method.
+\begin{lstlisting}[style=A_Java]
+public final class Division {
+    private Division() { }
+    public static double quotient(int a, int b) {
+        if (b == 0) throw new ArithmeticException();
+        return a / (double)b;
+    }
+}
+\end{lstlisting}
+A typical test for the class is shown below.
+\begin{lstlisting}[style=A_Java]
+public class DivisionTest {
+    private static final double delta = 1E-10;
+
+    @Test
+    public void quotientTest() throws Exception {
+        assertEquals(Arithmetic.quotient(1, 3), 0.3333333333333, delta);
+        assertEquals(Arithmetic.quotient(42, 3), 14.0, delta);
+        assertEquals(Arithmetic.quotient(-15, -5), 3.0, delta);
+        assertEquals(Arithmetic.quotient(66, 5), 13.2, delta);
+        assertEquals(Arithmetic.quotient(0, 123124), 0.0, delta);
+    }
+
+    @Test(expected = ArithmeticException.class)
+    public void quotientExceptionTest() throws Exception {
+        Arithmetic.quotient(5, 0);
+    }
+}
+\end{lstlisting}
+Suppose we have a resource string \texttt{'Some resource string'} in an id \texttt{'test\_string'}, then the following (although rather useless) demonstrates a test that requires Android to run.
+\begin{lstlisting}[style=A_Java]
+@RunWith(AndroidJUnit4.class)
+public class DemoTest {
+    @Test
+    public void androidTestExample() throws Exception {
+        Context appContext = InstrumentationRegistry.getTargetContext();
+        String resString = appContext.getResources().getString(R.string.test_string);
+        assertEquals("Some resource string", resString);
+    }
+}
+\end{lstlisting}
+We can use ActivityTestRule to test activities, provided by the Android testing support library. In the following example, the activity is lunched before each test and terminate once its complete (or manually terminated during the test).
+\begin{lstlisting}[style=A_Java]
+@RunWith(AndroidJUnit4.class)
+public class DemoTest {
+    
+    @Rule
+    public final ActivityTestRule<MainActivity> mActivity =
+            new ActivityTestRule<>(MainActivity.class, true, false);
+
+    @Before
+    public void setUp() {
+        mActivity.launchActivity(new Intent());
+    }
+    
+    @Test
+    public void androidTest() throws Exception {
+        Activity activity = mActivity.getActivity();
+        activity.findViewById(/* Some id */);
+        // some assertions
+    }
+}
+\end{lstlisting}
+
+\section{Mockito}
+Mockito is a very powerful library that provides test doubles so a specific functionality can be isolated and tested in each test. To use it in Android Studio, you should add the following dependencies.
+\begin{lstlisting}[style=A_txt]
+testCompile 'org.mockito:mockito-core:2.12.0'
+androidTestCompile 'org.mockito:mockito-core:2.12.0'
+\end{lstlisting}
+It can even be used to mock the functionality of Android APIs on the tests that run on a JVM.
+\begin{lstlisting}{style=A_Java}
+@RunWith(MockitoJUnitRunner.class)
+public class MockDemo {
+    @Mock
+    Context context;
+    @Mock
+    Resources resource;
+    @Test
+    public void testDemo() {
+        // When getResources() is called for our mocked object, we return our other mocked object
+        when(context.getResources()).thenReturn(resource);
+        // When getString() is called with this specific id, then "What I want" is returned
+        when(resource.getString(R.string.test_string)).thenReturn("What I want");
+        assertEquals("What I want", context.getResources().getString(R.string.test_string));
+    }
+}
+\end{lstlisting}
+In the provided example we have two classes. One class has a method that takes long to execute and the other class keeps and instance of first one and uses its method in a method. We use Mockito to mock the expensive method when testing the other one. The source code can be found \href{TODO}{here} and a programming session \href{TODO}{here}.
+
+\section{Room database testing}
 
 
+\section{Espresso}
 
+% dealing with web server
+% dealing with database
+% dealing with shared pref
+% dealing with firebase
