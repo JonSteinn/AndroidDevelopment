@@ -228,7 +228,7 @@ TSWLatexianTemp*
 *.jar
 *.war
 *.ear
-#*.zip
+*.zip
 *.tar.gz
 *.rar
 
@@ -261,4 +261,4 @@ local.properties
 .externalNativeBuild
 
 # Google Services (e.g. APIs or Firebase)
-#google-services.json
+google-services.json

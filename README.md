@@ -1,9 +1,9 @@
 # Android Development
 
 ## Table of Contents
-* [Syllabus](#syllabus)
 * [Assessment methods](#assessment-methods)
 * [Labs](#labs)
+* [Report template](#report)
 * [Useful resources](#useful-resources)
   + [Best practices](#best-practices)
   + [Features implementation](#features-implementation)
@@ -13,11 +13,19 @@
   + [List of web APIs](#list-of-web-apis)
   + [Open source Android projects](#open-source-android-projects)
 
-## Syllabus
-TODO
-
 ## Assessment methods
-TODO
+* Labs (total 25%)
+	* Individual
+	* best 5 out 6 count for 5% each
+* Final project (total 75%)
+	* Group size: 3
+	* Functionality 30%
+	* UI 15%
+	* Testing 10%
+	* Report 10%
+	* Demonstration 5%
+	* Peer evaluation 5%
+	* Bonus 5%
 
 ## Labs
 Lab | Content | PDF
@@ -29,6 +37,9 @@ Lab | Content | PDF
 4 | Web APIs | [Download](https://github.com/JonSteinn/AndroidDevelopment/raw/master/pdf/lab04.pdf)
 5 | Storage | [Download](https://github.com/JonSteinn/AndroidDevelopment/raw/master/pdf/lab05.pdf)
 6 | Testing | [Download](https://github.com/JonSteinn/AndroidDevelopment/raw/master/pdf/lab06.pdf)
+
+## Report template
+Download [here](https://github.com/JonSteinn/AndroidDevelopment/raw/master/tex/report_template.zip)
 
 ## Useful resources
 ### Best practices
