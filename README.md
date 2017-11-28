@@ -26,6 +26,7 @@
 	* Demonstration 5%
 	* Peer evaluation 5%
 	* Bonus 5%
+* Grading sheet with calculations can be found [here](https://docs.google.com/spreadsheets/d/1Nwg0cpgX_uQHYTOHVDHqUR52ldhvTTmeb8Md7ad_uHo/edit?usp=sharing)
 
 ## Labs
 Lab | Content | PDF
@@ -52,7 +53,6 @@ Download [here](https://github.com/JonSteinn/AndroidDevelopment/raw/master/tex/r
 * [Camera](https://developer.android.com/guide/topics/media/camera.html)
 * [Speech to Text](https://www.androidtutorialpoint.com/material-design/android-speech-text-tutorial/)
 * [Text to Speech](https://www.androidtutorialpoint.com/basics/android-text-speech-converter-code-android-studio/)
-* 
 ### List of libraries
 * [Android Open Source Projects](https://github.com/Trinea/android-open-project/tree/master/English%20Version)
 * [List of Android UI/UX Libraries](https://github.com/wasabeef/awesome-android-ui)
@@ -89,5 +89,6 @@ Download [here](https://github.com/JonSteinn/AndroidDevelopment/raw/master/tex/r
 ### List of web APIs
 * [toddmotto/public-apis](https://github.com/toddmotto/public-apis)
 * [abhishekbanthia/Public-APIs](https://github.com/abhishekbanthia/Public-APIs)
+* [Icelandic APIs](http://docs.apis.is/#endpoints)
 ### Open source Android projects
 * [Codepath's Sample Android Apps](https://guides.codepath.com/android/Sample-Android-Apps)
