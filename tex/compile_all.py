@@ -4,7 +4,7 @@ from shutil import copyfile
 
 # re-visit ef > 9
 s = "\\input{{settings.tex}}\n\\begin{{document}}\n\input{{lab0{0}/lab0{0}.tex}}\n\\end{{document}}"
-labs_count = 6
+labs_count = 7
 
 
 def clean_old(lab):

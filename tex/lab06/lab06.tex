@@ -90,7 +90,7 @@ testCompile 'org.mockito:mockito-core:2.12.0'
 androidTestCompile 'org.mockito:mockito-core:2.12.0'
 \end{lstlisting}
 It can even be used to mock the functionality of Android APIs on the tests that run on a JVM.
-\begin{lstlisting}{style=A_Java}
+\begin{lstlisting}[style=A_Java]
 @RunWith(MockitoJUnitRunner.class)
 public class MockDemo {
     @Mock
@@ -99,9 +99,11 @@ public class MockDemo {
     Resources resource;
     @Test
     public void testDemo() {
-        // When getResources() is called for our mocked object, we return our other mocked object
+        // When getResources() is called for our mocked 
+        // object, we return our other mocked object
         when(context.getResources()).thenReturn(resource);
-        // When getString() is called with this specific id, then "What I want" is returned
+        // When getString() is called with this 
+        // specific id, then "What I want" is returned
         when(resource.getString(R.string.test_string)).thenReturn("What I want");
         assertEquals("What I want", context.getResources().getString(R.string.test_string));
     }
