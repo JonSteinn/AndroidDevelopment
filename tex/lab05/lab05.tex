@@ -27,7 +27,7 @@ SharedPreferences.Editor editor = pref.edit();
 editor.putString("MY_KEY", "MY_VALUE");
 editor.apply(); // happens in background, use .commit() to force write here
 \end{lstlisting}
-In the provided example we use \texttt{SharedReferences} to store background color settings so when the app is started again the color is set to whatever it was the last time the app was used. The sourcecode is available \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab5/colorpref}{here} and a programming session \href{TODO}{here}.
+In the provided example we use \texttt{SharedReferences} to store background color settings so when the app is started again the color is set to whatever it was the last time the app was used. The sourcecode is available \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab5/colorpref}{here} and a programming session \href{https://www.youtube.com/watch?v=LbOh8KTwhVo}{here}.
 
 \section{Local SQLite database}
 Android has a built in local SQLite database. SQLite is an very small and lightweight ACID-compliant open source relational database system written in C. This course assumes prior knowledge of databases and SQL. The main objective here is to use them in Android so most table schemas are kept trivial.\\
@@ -68,7 +68,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 }
 \end{lstlisting}
-Note that getting a new \texttt{SQLiteDatabase} instance in each access method is expansive so you might want to use a single instance and close it when done. In the provided example we create a single table database holding game info which you can add to, edit and remove. The source code is available \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab5/gamesdb}{here} and a programming session \href{TODO}{here}.
+Note that getting a new \texttt{SQLiteDatabase} instance in each access method is expansive so you might want to use a single instance and close it when done. In the provided example we create a single table database holding game info which you can add to, edit and remove. The source code is available \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab5/gamesdb}{here} and a programming session \href{https://www.youtube.com/watch?v=miwDjfKtd7o}{here}.
 
 \subsection{Room Persistence Library}
 The Room persistence library provides an abstraction layer over SQLite. It was introduced by Google in 2017\footnote{There could be some Java +1.8 compatability issues depending on when you are reading this}. It uses annotation and consists of the three following components.
@@ -140,7 +140,7 @@ In the provided example we create a trivial authentication system (passwords sto
 \section{Remote Firebase databse}
 Firebase is a web and mobile development platform owned by Google. It has multiple services like authentication and a realtime database. We will look at the latter, a backend as a service, similar to Azure.\\
 
-The realtime database is a NoSQL database that uses JSON structure to store data. The data is synchronized in realtime to every connected client. To setup Firebase realtime database in your project, go to \menu{Tools > Firebase} and follow the provided instructions. The provided example uses just a single key in the JSON object and sets up a onDataChange listener to it and offers the user to redefine its value. The source code can be found \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab5/firebase}{here} and a programming session \href{TODO}{here}.
+The realtime database is a NoSQL database that uses JSON structure to store data. The data is synchronized in realtime to every connected client. To setup Firebase realtime database in your project, go to \menu{Tools > Firebase} and follow the provided instructions. The provided example uses just a single key in the JSON object and sets up a onDataChange listener to it and offers the user to redefine its value. The source code can be found \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab5/firebase}{here} and a programming session \href{https://www.youtube.com/watch?v=TmHsO5nmy7s}{here}.
 
 \section{Assignment}
 In this assignment you can choose between using the local SQLite database (preferably using the Room library) or the Firebase realtime database. Your app should start with a simple authentication where a user can create an account or log in with an existing one (a password is not required but usernames must be unique). After that, you get a random arithmetic problem from the following categories:
