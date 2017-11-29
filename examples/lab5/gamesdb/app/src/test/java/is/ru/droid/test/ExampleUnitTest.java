@@ -1,4 +1,4 @@
-package is.ru.droid.lab;
+package is.ru.droid.test;
 
 import org.junit.Test;
 

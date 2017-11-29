@@ -1,4 +1,4 @@
-package is.ru.droid.lab;
+package is.ru.droid.test;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -15,8 +15,8 @@ public class DbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String query = String.format(
-                "CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT, %s TEXT, %s TEXT)",
-                Game.TABLE_NAME, Game.C1, Game.C2, Game.C3, Game.C4);
+                "CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT, %s TEXT)",
+                Game.TABLE_NAME, Game.C1, Game.C2, Game.C3);
         db.execSQL(query);
     }
 

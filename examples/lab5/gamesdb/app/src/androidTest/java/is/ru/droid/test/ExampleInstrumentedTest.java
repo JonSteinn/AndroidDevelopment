@@ -1,4 +1,4 @@
-package is.ru.droid.lab;
+package is.ru.droid.test;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("is.ru.droid.lab", appContext.getPackageName());
+        assertEquals("is.ru.droid.test", appContext.getPackageName());
     }
 }

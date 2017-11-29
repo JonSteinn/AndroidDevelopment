@@ -1,4 +1,4 @@
-package is.ru.droid.lab;
+package is.ru.droid.test;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -8,10 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-/**
- * Created by Jonni on 11/19/2017.
- */
 
 public class DataAccess {
 
@@ -28,27 +24,25 @@ public class DataAccess {
         dbHelper.close();
     }
 
-    public boolean addGame(Game game) {
+    public int addGame(Game game) {
         ContentValues cv = new ContentValues();
         cv.put(Game.C2, game.getName());
-        cv.put(Game.C3, game.getDeveloper());
-        cv.put(Game.C4, game.getReleaseYear());
-        long returnValue = db.insert(Game.TABLE_NAME, null, cv);
-        return returnValue != -1L;
+        cv.put(Game.C3, game.getReleaseYear());
+        return (int)db.insert(Game.TABLE_NAME, null, cv);
+
     }
 
-    public void updateGame(Game game) {
+    public boolean updateGame(Game game) {
         ContentValues cv = new ContentValues();
         cv.put(Game.C1, game.getId());
         cv.put(Game.C2, game.getName());
-        cv.put(Game.C3, game.getDeveloper());
-        cv.put(Game.C4, game.getReleaseYear());
-        db.update(Game.TABLE_NAME, cv, Game.C1 + " =  ?",
-                new String[]{ String.format(Locale.US, "%d", game.getId()) });
+        cv.put(Game.C3, game.getReleaseYear());
+        return db.update(Game.TABLE_NAME, cv, Game.C1 + " =  ?",
+                new String[]{ String.format(Locale.US, "%d", game.getId()) }) > 0;
     }
 
-    public void deleteGameByID(String id) {
-        db.delete(Game.TABLE_NAME, Game.C1 + " = ?", new String[]{id});
+    public boolean deleteGameByID(String id) {
+        return db.delete(Game.TABLE_NAME, Game.C1 + " = ?", new String[]{id}) > 0;
     }
 
     public List<Game> getAllGames() {
@@ -56,7 +50,7 @@ public class DataAccess {
         List<Game> games = new ArrayList<>(c.getCount());
         while (c.moveToNext()) {
             games.add(new Game(c.getInt(0), c.getString(1),
-                    c.getString(2), c.getString(3)));
+                    c.getString(2)));
         }
         c.close();
         return games;

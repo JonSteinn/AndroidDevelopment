@@ -5,17 +5,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="is.ru.droid.lab.MainActivity">
+    tools:context="is.ru.droid.test.MainActivity">
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/name"
         android:id="@+id/name"/>
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/developer"
-        android:id="@+id/developer"/>
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,18 +22,10 @@
         android:text="@string/add"
         android:onClick="add"/>
 
-
-    <ScrollView
+    <ListView
+        android:longClickable="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp">
-
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/table"
-            android:stretchColumns="*">
-        </TableLayout>
-
-    </ScrollView>
+        android:id="@+id/list">
+    </ListView>
 </LinearLayout>
