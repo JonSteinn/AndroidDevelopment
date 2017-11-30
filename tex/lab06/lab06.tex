@@ -109,7 +109,7 @@ public class MockDemo {
     }
 }
 \end{lstlisting}
-In the provided example we have two classes. One class has a method that takes long to execute and the other class keeps and instance of first one and uses its method in a method. We use Mockito to mock the expensive method when testing the other one. The source code can be found \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab6/mocktest}{here} and a programming session \href{TODO}{here}.
+In the provided example we have two classes. One class has a method that takes long to execute and the other class keeps and instance of first one and uses its method in a method. We use Mockito to mock the expensive method when testing the other one. The source code can be found \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab6/mocktest}{here} and a programming session \href{https://www.youtube.com/watch?v=AFCe_xwfR8g}{here}.
 
 \section{Room database testing}
 Suppose we have a database called \texttt{MyDatabase}, then we can create an in memory database for testing our dao queries. The database query tests belong to the tests performed on Android.
@@ -140,7 +140,7 @@ public class DaoTest {
 }
 \end{lstlisting}
 In the provided example we have a very simple database of users with nothing but an id and name and some possibles queries that we test. The
-source code is available \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab6/roomtest}{here} and a programming session \href{TODO}{here}.
+source code is available \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab6/roomtest}{here} and a programming session \href{https://www.youtube.com/watch?v=aMxfgqUGnhc}{here}.
 
 \section{Espresso}
 Espresso is a UI testing framework where you can automate interaction with views based on ids or text. The following shows an example of a button click on a button with id \texttt{my\_btn} and matching of text on a text view with id \texttt{my\_txt}.
@@ -150,7 +150,7 @@ onView(withId(R.id.my_txt)).check(matches(withText("TEXT")));
 \end{lstlisting}
 There are multiple matchers, actions and assertions available but we will suffice providing a link with a cheat sheet \href{https://google.github.io/android-testing-support-library/downloads/espresso-cheat-sheet-2.1.0.pdf}{here}, rather than to go over each individually. We can also write custom matchers.\\
 
-One problem we might find us in when creating UI tests is that our interaction talks to web servers or databases which we do not want during testing. We therefore need to replace these calls with mocked versions. The provided example does this for a web server call, shared preferences, Room database and Firebase database. It also includes one custom matcher. The source code can be found \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab6/espressotest}{here} and a programming session \href{TODO}{here}.
+One problem we might find us in when creating UI tests is that our interaction talks to web servers or databases which we do not want during testing. We therefore need to replace these calls with mocked versions. The provided example does this for a web server call, shared preferences, Room database and Firebase database. It also includes one custom matcher. The source code can be found \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab6/espressotest}{here} and a programming session here $\left\{\right.$\href{https://www.youtube.com/watch?v=RW19LV9FG7w}{I},\href{https://www.youtube.com/watch?v=pxdfimd4MDc}{II},\href{TODO}{III},\href{TODO}{IV}$\left.\right\}$.
 
 
 \section{Assignment}
