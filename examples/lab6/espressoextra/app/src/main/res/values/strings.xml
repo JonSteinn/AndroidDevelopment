@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">LastEspresso</string>
+    <string name="plus">+</string>
+    <string name="equals">=</string>
+    <string name="req">Required</string>
+    <string name="numb">Only numbers!</string>
+</resources>
