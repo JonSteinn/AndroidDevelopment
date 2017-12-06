@@ -142,11 +142,20 @@ Firebase is a web and mobile development platform owned by Google. It has multip
 
 The realtime database is a NoSQL database that uses JSON structure to store data. The data is synchronized in realtime to every connected client. To setup Firebase realtime database in your project, go to \menu{Tools > Firebase} and follow the provided instructions. The provided example uses just a single key in the JSON object and sets up a onDataChange listener to it and offers the user to redefine its value. The source code can be found \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab5/firebase}{here} and a programming session \href{https://www.youtube.com/watch?v=TmHsO5nmy7s}{here}.
 
+\section{Database via web service}
+One way to store data remotely is to use a web server between your app and a database. There are multiple frameworks to choose from using various languages. In the provided example we create a pizza app where you can create pizzas and like other pizzas. The databased is accessed via a Flask web service. The source code can be found \href{https://github.com/JonSteinn/AndroidDevelopment/tree/master/examples/lab5/webservice}{here} and a programming session here $\left\{\right.$\href{https://youtu.be/CEA9KUqzHGU}{I} - \href{https://youtu.be/QJ47HknYbEs}{II} - \href{https://youtu.be/ytR8qfVj1gU}{III} - \href{https://youtu.be/mjHSuKgRvgE}{IV} - \href{https://youtu.be/2BJmIf9at40}{V} - \href{https://youtu.be/bcOkPMBaU74}{VI}$\left.\right\}$.
+
 \section{Assignment}
-In this assignment you can choose between using the local SQLite database (preferably using the Room library) or the Firebase realtime database. Your app should start with a simple authentication where a user can create an account or log in with an existing one (a password is not required but usernames must be unique). After that, you get a random arithmetic problem from the following categories:
+In this assignment you can choose between using the local SQLite database (preferably using the Room library), the Firebase realtime database or making a web service (using any framework) between your app and a database. Your app should start with a simple authentication where a user can create an account or log in with an existing one (a password is not required but usernames must be unique). After that, you get a random arithmetic problem from the following categories:
 \begin{itemize}
 \item addition
 \item subtraction
 \item multiplication
 \end{itemize}
-The user should be able to enter an answer and you should keep per-user statistics for each category (total wins and total played in category $X$ for player $Y$). If a player leaves without answering a question, that question should remain when he comes back. How the user can view his statistics is up to you.
+The user should be able to enter an answer and you should keep per-user statistics for each category (total wins and total played in category $X$ for player $Y$). If a player leaves without answering a question, that question should remain when he comes back. A prototype can be seen in figure \ref{fig:proto}.
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.3]{ui_scetch_for_assig.png}
+\caption{Prototype for assignment 5}
+\label{fig:proto}
+\end{figure}
