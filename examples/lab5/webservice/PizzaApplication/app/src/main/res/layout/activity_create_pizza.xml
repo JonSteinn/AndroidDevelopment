@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:gravity="center"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="is.ru.droid.pizzaapplication.CreatePizzaActivity">
+
+
+    <EditText
+        android:id="@+id/create_name"
+        android:layout_margin="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.2"
+        android:hint="name"
+        android:textSize="25sp"
+        android:gravity="center"/>
+    <EditText
+        android:id="@+id/create_description"
+        android:layout_margin="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:hint="list of toppings"
+        android:layout_weight="0.7"/>
+    <Button
+        android:layout_margin="15dp"
+        android:onClick="createPizza"
+        android:text="create pizza"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"/>
+</LinearLayout>
