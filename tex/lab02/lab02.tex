@@ -149,7 +149,7 @@ public static void main(String[] args) {
 \section{The Android UI thread}
 Upon starting an Android app, a thread is created which will run our launcher activity and from there on, any component (which we will look at later). It also handles all events and interaction concerning the UI. No other threads should interact directly with the UI. This thread is called the main thread or the UI thread.\\
 
-Suppose our app needs to run a long and expensive task, taking 10 seconds to execute. If we were to run that on the main thread, then it would not be able to listen for any events during the task and the UI would essentially be locked and eventually the operating system would warn the user that the app is not responding. To avoid this, all expensive tasks should be performed by new threads in the background of the main one. Tasks like calling a web server, downloading and many more.\\
+Suppose our app needs to run a long and expensive task, taking 10 seconds to execute. If we were to run that on the main thread, then it would not be able to listen for any events during the task and the UI would essentially be locked and eventually the operating system would warn the user that the app is not responding. To avoid this, all expensive tasks should be performed by new threads in the background of the main one. Tasks like calling a web service, downloading and many more.\\
 
 Just as the UI thread should not run long tasks, the vice versa holds, that long task running threads should never update the UI. The two rules of thumb are
 \begin{itemize}
