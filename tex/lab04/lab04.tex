@@ -127,8 +127,7 @@ One approach to writing apps is to keep the logic stored on a web service making
 \end{figure}
 
 \section{Assignment}
-Use the \href{https://developer.oxforddictionaries.com}{Oxford dictionaries API} to create an app where you can enter an english word and get its definition displayed. The app should also contain a choice between Spanish and German (or any two distinct non English languages) and display the word's meaning in that language. In order to do that you must get a key (there is a free one available) which you should add as header fields when making a request.
-
+Use the \href{https://developer.oxforddictionaries.com}{Oxford dictionaries API} to create an app where you can enter an english word and get its definition in english displayed. The app should also contain a choice (radio button for example) between Spanish and German (or any two distinct non English languages) and display the word's meaning in the chosen language on the same event that displays its definition. A prototype for the app can be seen in figure \ref{fig:proto}. In order to do so you must get a key (there is a free one available) which you should add as header fields when making a request.
 \begin{lstlisting}[style=A_Java]
 Ion.with(this)
         .load(url)
@@ -137,3 +136,9 @@ Ion.with(this)
         .addHeader("app_key", "<somekey>")
         // and so on
 \end{lstlisting}
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.7]{ui_scetch_for_assig.png}
+\caption{Assignment prototype}
+\label{fig:proto}
+\end{figure}
