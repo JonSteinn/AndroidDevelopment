@@ -145,7 +145,7 @@ source code is available \href{https://github.com/JonSteinn/AndroidDevelopment/t
 \section{Espresso}
 Espresso is a UI testing framework where you can automate interaction with views based on ids or text. The following shows an example of a button click on a button with id \texttt{my\_btn} and matching of text on a text view with id \texttt{my\_txt}.
 \begin{lstlisting}[style=A_Java]
-onView(withId(R.id.my_view)).perform(click()); // 
+onView(withId(R.id.my_view)).perform(click()); 
 onView(withId(R.id.my_txt)).check(matches(withText("TEXT")));
 \end{lstlisting}
 There are multiple matchers, actions and assertions available but we will suffice providing a link with a cheat sheet \href{https://google.github.io/android-testing-support-library/downloads/espresso-cheat-sheet-2.1.0.pdf}{here}, rather than to go over each individually. We can also write custom matchers.\\
@@ -154,4 +154,9 @@ One problem we might find us in when creating UI tests is that our interaction t
 
 
 \section{Assignment}
-Add tests to \href{https://github.com/JonSteinn/AndroidDevelopment/raw/master/examples/lab6/test_template.zip}{this} project. The more you test, the higher the grade.
+Add tests to \href{https://github.com/JonSteinn/AndroidDevelopment/raw/master/examples/lab6/test_template.zip}{this} project. 
+\begin{itemize}
+\item $\left[25\%\right]$ Unit test the \texttt{BinaryConverter} class. For full points you must have full coverage excluding the private constructor.
+\item $\left[25\%\right]$ Test the database queries. For full points, every query must be tested.
+\item $\left[50\%\right]$ Test UI. For full points, every possible interaction (including invalid inputs) must be tested and while doing so, you must not use real data from either the database or the web service.
+\end{itemize}
