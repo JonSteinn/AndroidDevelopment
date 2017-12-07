@@ -55,7 +55,9 @@ def authorization_needed(fun):
         try:
             data = jwt.decode(token, app.config['SECRET_KEY'])
             this_user = User.query.filter_by(open_id=data['open_id']).first()
-            return fun(this_user, *args, **kwargs)
+            if this_user:
+            	return fun(this_user, *args, **kwargs)
+            return jsonify({'msg': 'invalid user'}), ERR_CODE
         except jwt.DecodeError:
             return jsonify({'msg': 'invalid token'}), ERR_CODE
     return decorated
